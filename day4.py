@@ -2,6 +2,8 @@
 
 from collections import OrderedDict
 from datetime import datetime, timedelta
+
+import operator
 import sys
 
 print('Running:',sys.argv[0])
@@ -24,29 +26,11 @@ print('PART ONE')
 # [1518-05-08 00:02] Guard #659 begins shift
 # [1518-06-09 00:52] falls asleep
 # [1518-07-27 00:59] wakes up
-guards = OrderedDict()
-guard = None
-min_time = None
-lines = []
-for line in inputs:
-    date, time, rest = line.split(' ', 2)
-    date = date[1:]
-    time = time[:-1]
-    #print(date, time, rest)
-    import calendar
-    timetuple = date.split('-') + time.split(':') + [0,0,0,0]
-    timetuple[0] = 1970
-    #print(timetuple)
-    timestamp = calendar.timegm([int(i) for i in timetuple])
-    if min_time is None or timestamp < min_time:
-        min_time = timestamp
-    #print(timestamp)
-    lines.append((timestamp, line))
-lines = sorted(lines, key=lambda x: x[0])
 
 # 0 = minute spent awake, 1 = minute spent asleep
-for _, line in lines:
-    #print(line)
+guards = OrderedDict()
+lines = sorted(inputs)
+for line in lines:
     date, time, rest = line.split(' ', 2)
     date = date[1:]
     time = time[:-1].split(':')
@@ -62,7 +46,6 @@ for _, line in lines:
         n_day = str(t.day)
         n_day = '0' + n_day if len(n_day) == 1 else n_day
         day = '-'.join(date.split('-')[:-2] + [n_mon, n_day])
-        #print(day)
 
     if rest.startswith('Guard'):
         guard = rest.split()[1][1:]
@@ -79,50 +62,48 @@ for _, line in lines:
         for i in range(time[1], 60):
             guards[guard][day][i] = 0
 
-most_sleep = None
+sleepiest_guard = None
 most_sleep_mins = 0
-most_mins = []
-import operator
+most_sleep_schedule = []
 for guard, sleeping in guards.items():
     sleep = 0
     guard_sleep_mins = [0] * 60
-    for date, sched in sleeping.items():
-        sleep += sum(sched)
+    for date, sleep_schedule in sleeping.items():
+        sleep += sum(sleep_schedule)
         for i in range(60):
-            guard_sleep_mins[i] += sched[i]
-        #map(operator.add, guard_sleep_mins, sched)
-        #print(guard, date, ''.join(map(str, sched)))
+            guard_sleep_mins[i] += sleep_schedule[i]
+        #print(guard, date, ''.join(map(str, sleep_schedule)))
     if sleep > most_sleep_mins:
-        most_mins = guard_sleep_mins
+        # this guard slept more than the sleepiest guard
+        most_sleep_schedule = guard_sleep_mins
         most_sleep_mins = sleep
-        most_sleep = guard
-print(most_sleep)
-print(most_mins)
-print(max(most_mins))
-most_min = most_mins.index(max(most_mins))
-print(most_min)
-print(int(most_sleep) * most_min)
+        sleepiest_guard = guard
+print('Guard ID:', sleepiest_guard)
+print('Most sleep:', max(most_sleep_schedule))
+most_minutes = most_sleep_schedule.index(max(most_sleep_schedule))
+print('Sleepiest minute:', most_minutes)
+print('Guard*Minute:', int(sleepiest_guard) * most_minutes)
 
 print()
 print('PART TWO')
 
 for guard, sleeping in guards.items():
     total_per_min = [0] * 60
-    for date, sched in sleeping.items():
+    for date, sleep_schedule in sleeping.items():
         for i in range(60):
-            total_per_min[i] += sched[i]
+            total_per_min[i] += sleep_schedule[i]
     guards[guard] = total_per_min
 
-most_guard = None
+sleepiest_guard = None
 most_sleep_per_min = 0
-most_min = None
-for guard, sched in guards.items():
+most_minutes = None
+for guard, sleep_schedule in guards.items():
     for i in range(60):
-        if sched[i] > most_sleep_per_min:
-            most_sleep_per_min = sched[i]
-            most_min = i
-            most_guard = guard
+        if sleep_schedule[i] > most_sleep_per_min:
+            most_sleep_per_min = sleep_schedule[i]
+            most_minutes = i
+            sleepiest_guard = guard
 
-print(most_guard)
-print(most_min)
-print(int(most_guard) * most_min)
+print('Guard ID:', sleepiest_guard)
+print('Sleepiest minute:', most_minutes)
+print('Guard*Minute:', int(sleepiest_guard) * most_minutes)
