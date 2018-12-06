@@ -40,11 +40,13 @@ for n in range(len(inputs)):
     coords.append([x, y, n, 0])
 
 on_edge = set()
+safe_region = 0
 for x in range(min_x, max_x + 1):
     for y in range(min_y, max_y + 1):
         min_d = None
         val = None
         min_count = 0
+        dist_from = 0
         for n in range(len(coords)):
             coord = coords[n]
             man_d = abs(coord[0] - x) + abs(coord[1] - y)
@@ -54,20 +56,18 @@ for x in range(min_x, max_x + 1):
                 min_count = 1
             elif man_d == min_d:
                 min_count += 1
+            dist_from += man_d
         if min_count == 1:
             if x in (min_x, max_x) or y in (min_y, max_y):
                 on_edge.add(val)
             coords[val][3] += 1
+        safe_region += 1 if dist_from < 10000 else 0
 
 r_coords = [x for x in sorted(coords, key=lambda x: x[3]) if x[2] not in on_edge]
 print('Largest region:', r_coords[-1][3])
 
 print()
 print('PART TWO')
+print('Safe regions:', safe_region)
 
 # safe_region = sum([sum([1 if sum((abs(coord[0] - x) + abs(coord[1] - y)) for coord in coords) < 10000 else 0 for y in range(min_y, max_y + 1)]) for x in range(min_x, max_x + 1)])
-safe_region = 0
-for x in range(min_x, max_x + 1):
-    for y in range(min_y, max_y + 1):
-        safe_region += 1 if sum((abs(coord[0] - x) + abs(coord[1] - y)) for coord in coords) < 10000 else 0
-print('Safe regions:', safe_region)
