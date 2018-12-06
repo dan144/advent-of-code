@@ -23,9 +23,9 @@ min_x = None
 max_x = None
 min_y = None
 max_y = None
-n = 0
 #inputs = ['1, 1', '1, 6', '8, 3', '3, 4', '5, 5', '8, 9'] # test
-for line in inputs:
+for n in range(len(inputs)):
+    line = inputs[n]
     x, y = line.split(', ')
     x = int(x)
     y = int(y)
@@ -38,16 +38,8 @@ for line in inputs:
     if not max_y or y > max_y:
         max_y = y
     coords.append([x, y, n, 0])
-    n += 1
 
-board = []
-for i in range(max_x + 1):
-    board.append([0] * (max_y + 1))
-
-for n in range(len(coords)):
-    coord = coords[n]
-    board[coord[0]][coord[1]] = n
-
+on_edge = set()
 for x in range(max_x + 1):
     for y in range(max_y + 1):
         min_d = None
@@ -63,31 +55,19 @@ for x in range(max_x + 1):
             elif man_d == min_d:
                 min_count += 1
         if min_count == 1:
-            board[x][y] = val
+            if x in (min_x, max_x) or y in (min_y, max_y):
+                on_edge.add(val)
             coords[val][3] += 1
 
-coords = sorted(coords, key=lambda x: x[3])
-
-on_edge = set()
-for x in range(min_x, max_x + 1):
-    on_edge.add(board[x][min_y])
-    on_edge.add(board[x][max_y])
-for y in range(min_y, max_y + 1):
-    on_edge.add(board[min_x][y])
-    on_edge.add(board[max_x][y])
-
-r_coords = [x for x in coords if x[2] not in on_edge]
+r_coords = [x for x in sorted(coords, key=lambda x: x[3]) if x[2] not in on_edge]
 print('Largest region:', r_coords[-1][3])
 
 print()
 print('PART TWO')
 
+# safe_region = sum([sum([1 if sum((abs(coord[0] - x) + abs(coord[1] - y)) for coord in coords) < 10000 else 0 for y in range(min_y, max_y + 1)]) for x in range(min_x, max_x + 1)])
 safe_region = 0
 for x in range(min_x, max_x + 1):
     for y in range(min_y, max_y + 1):
-        total_man = 0
-        for coord in coords:
-            total_man += abs(coord[0] - x) + abs(coord[1] - y)
-        if total_man < 10000:
-            safe_region += 1
-print('Safe region:', safe_region)
+        safe_region += 1 if sum((abs(coord[0] - x) + abs(coord[1] - y)) for coord in coords) < 10000 else 0
+print('Safe regions:', safe_region)
