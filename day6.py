@@ -40,8 +40,8 @@ for n in range(len(inputs)):
     coords.append([x, y, n, 0])
 
 on_edge = set()
-for x in range(max_x + 1):
-    for y in range(max_y + 1):
+for x in range(min_x, max_x + 1):
+    for y in range(min_y, max_y + 1):
         min_d = None
         val = None
         min_count = 0
