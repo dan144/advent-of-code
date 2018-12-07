@@ -54,16 +54,17 @@ print(ans)
 print()
 print('PART TWO')
 
-data = {}
+data = {} # key/value will be letter/dependencies
 for a, b in orders:
     if a not in data:
         data[a] = []
     if b not in data:
         data[b] = []
     data[b].append(a)
+
 remain = []
 for l, n in data.items():
-    if n == []:
+    if n == []: # tasks with no initial dependencies
         remain.append(l)
 for letter in remain:
     data.pop(letter)
@@ -72,34 +73,35 @@ workers = 5
 base_time = 60
 t = 0
 work = []
-ans = ''
 while remain or work:
     remain.sort()
-    for w in range(len(work), workers):
-        if remain:
+    for w in range(len(work), workers): # add up to one job per worker
+        if remain: # if there's remaining work
+            # task, elapsed time, time to take
             work.append([remain[0], 0, base_time + 1 + ord(remain[0]) - ord('A')])
             remain = remain[1:]
         else:
             break
+
     t += 1
     to_remove = []
-    for i in range(len(work)):
+    for i in range(len(work)): # check for completed work
         w = work[i]
         w[1] += 1
         if w[1] == w[2]:
-            ans += w[0]
             to_remove.append(w)
+
     to_add = []
-    for l, _, _ in to_remove:
+    for l, _, _ in to_remove: # check for tasks that can now be queued
         for letter, needs in data.items():
             if l in needs:
                 data[letter].remove(l)
             if data[letter] == []:
                 to_add.append(letter)
-    for l in to_remove:
+
+    for l in to_remove: # remove completed work
         work.remove(l)
-    for letter in to_add:
+    for letter in to_add: # add new work to start
         remain.append(letter)
         data.pop(letter)
-    #print(ans, remain, work)
 print(t)
