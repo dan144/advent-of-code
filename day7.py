@@ -1,19 +1,36 @@
 #!/usr/bin/python3
 
+import json
 import sys
 
 print('Running:',sys.argv[0])
 
+testing = len(sys.argv) == 2
+
 n = sys.argv[0][2:].index('.')
 filen = sys.argv[0][5:n+1+len(str(n))]
 input_file = 'input' + str(filen)
+
+if testing:
+    print('TESTING')
+    input_file = 'test' + input_file
+
 print('Reading:', input_file)
 
 orders = []
+workers = 5
+base_time = 60
 with open(input_file, 'r') as f:
+    if testing:
+        test_vals = json.loads(f.readline())
+        workers = test_vals['max_workers']
+        base_time = test_vals['base_time']
+        part_one = test_vals['part_one']
+        part_two = test_vals['part_two']
     for line in f:
         orders.append([line.split()[1], line.split()[7]])
-# Step T must be finished before step W can begin.
+if testing:
+    print(inputs)
 
 print()
 print('PART ONE')
@@ -50,6 +67,11 @@ while remain:
     remain = remain[1:]
 
 print(ans)
+if testing:
+    if ans == part_one:
+        print('PART ONE CORRECT')
+    else:
+        print('PART ONE FAILED')
 
 print()
 print('PART TWO')
@@ -69,8 +91,6 @@ for l, n in data.items():
 for letter in remain:
     data.pop(letter)
 
-workers = 5
-base_time = 60
 t = 0
 work = []
 while remain or work:
@@ -105,3 +125,8 @@ while remain or work:
         remain.append(letter)
         data.pop(letter)
 print(t)
+if testing:
+    if t == part_two:
+        print('PART TWO CORRECT')
+    else:
+        print('PART TWO FAILED')
