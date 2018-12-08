@@ -1,4 +1,14 @@
 #!/bin/bash
 
-number=`date | cut -d' ' -f4`
-./day$number.py
+if [ -z "$1" ]; then
+  number=`date | cut -d' ' -f4`
+else
+  number=$1
+fi
+
+echo "Test run"
+./day$number.py -t
+echo
+echo
+echo "Running"
+time ./day$number.py

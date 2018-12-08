@@ -30,7 +30,7 @@ with open(input_file, 'r') as f:
     for line in f:
         orders.append([line.split()[1], line.split()[7]])
 if testing:
-    print(inputs)
+    print(orders)
 
 print()
 print('PART ONE')
