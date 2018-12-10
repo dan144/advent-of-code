@@ -47,24 +47,25 @@ t = 0
 lastx = None
 lasty = None
 onboard = []
+edges = None
 while not ans:
     x = 0
     y = 0
-    minx = 0
-    miny = 0
-    maxx = 0
-    maxy = 0
+    minx = None
+    miny = None
+    maxx = None
+    maxy = None
     dots = []
     for point in points:
         mx = point[0] + (t * point[2])
         my = point[1] + (t * point[3])
-        if mx < minx:
+        if minx is None or mx < minx:
             minx = mx
-        if my < miny:
+        if miny is None or my < miny:
             miny = my
-        if mx > maxx:
+        if maxx is None or mx > maxx:
             maxx = mx
-        if my > maxy:
+        if maxy is None or my > maxy:
             maxy = my
         dots.append((mx,my))
     sizex = maxx - minx
@@ -72,6 +73,7 @@ while not ans:
     if not lastx or not lasty or sizex < lastx or sizey < lasty:
         lastx = sizex
         lasty = sizey
+        edges = (minx, maxx, miny, maxy)
         onboard = dots
     else:
         break
@@ -79,6 +81,7 @@ while not ans:
 
 t -= 1
 board = []
+minx, maxx, miny, maxy = edges
 for i in range(maxy - miny + 1):
     board.append(['.'] * (maxx - minx + 1))
 for mx, my in onboard:
@@ -94,7 +97,6 @@ if testing:
         print('PART ONE CORRECT')
     else:
         print('PART ONE FAILED')
-
 
 print()
 print('PART TWO')
