@@ -29,11 +29,64 @@ with open(input_file, 'r') as f:
 if testing:
     print(inputs)
 
+# position=< 52672,  52690> velocity=<-5, -5>
+points = []
+for line in inputs:
+    p, v = line.split('>', 1)
+    x = int(p[p.index('<')+1:p.index(',')].strip())
+    y = int(p[p.index(',')+1:].strip())
+    vx = int(v[v.index('<')+1:v.index(',')].strip())
+    vy = int(v[v.index(',')+1:-1].strip())
+    points.append((x,y,vx,vy))
+
 print()
 print('PART ONE')
 ans = None
 
+t = 0
+lastx = None
+lasty = None
+onboard = []
+while not ans:
+    x = 0
+    y = 0
+    minx = 0
+    miny = 0
+    maxx = 0
+    maxy = 0
+    dots = []
+    for point in points:
+        mx = point[0] + (t * point[2])
+        my = point[1] + (t * point[3])
+        if mx < minx:
+            minx = mx
+        if my < miny:
+            miny = my
+        if mx > maxx:
+            maxx = mx
+        if my > maxy:
+            maxy = my
+        dots.append((mx,my))
+    sizex = maxx - minx
+    sizey = maxy - miny
+    if not lastx or not lasty or sizex < lastx or sizey < lasty:
+        lastx = sizex
+        lasty = sizey
+        onboard = dots
+    else:
+        break
+    t += 1
 
+t -= 1
+board = []
+for i in range(maxy - miny + 1):
+    board.append(['.'] * (maxx - minx + 1))
+for mx, my in onboard:
+    mx -= minx
+    my -= miny
+    board[my][mx] = '#'
+for row in board:
+    print(''.join(row))
 
 print(ans)
 if testing:
@@ -45,9 +98,7 @@ if testing:
 
 print()
 print('PART TWO')
-ans = None
-
-
+ans = t
 
 print(ans)
 if testing:
