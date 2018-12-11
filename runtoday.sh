@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [ -z "$1" ]; then
-  number=`date | cut -d' ' -f4`
+  number=`date | cut -d' ' -f3`
 else
   number=$1
 fi
