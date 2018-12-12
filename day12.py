@@ -42,7 +42,9 @@ for a in inputs[2:]:
     actions[i] = o
 
 m = 0
-generations = 90
+val = 0
+pattern = [0] * 10
+generations = 50000000000
 for i in range(generations):
     board = ['.']*4 + board + ['.']*4
     m += 2
@@ -60,9 +62,14 @@ for i in range(generations):
     while n[-1] == '.':
         n.pop()
     board = n
-    if i == 20:
-        ans = sum([i - m for i in range(len(board)) if board[i] == '#'])
+    last = val
+    val = sum([j - m for j in range(len(board)) if board[j] == '#'])
+    pattern = pattern[1:] + [val - last]
+    if i == 19:
+        ans = val
         print(ans)
+    if i > 20 and all([pattern[j] == pattern[j+1] for j in range(len(pattern) - 1)]):
+        break
 
 if testing:
     if part_one == ans:
@@ -76,7 +83,9 @@ print('PART TWO')
 # pattern:  at generation 89, the number of plants is 5145
 #           after that, each generation increases by 50
 
-ans = sum([i - m for i in range(len(board)) if board[i] == '#']) + (50000000000 - generations) * 50
+print('Generation', i, 'value:', val)
+print('Generational increment:', pattern[-1])
+ans = val + (generations - i - 1) * pattern[-1]
 
 print(ans)
 if testing:
