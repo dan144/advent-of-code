@@ -67,41 +67,43 @@ while ncarts > 1:
                 continue
             m = carts[y][x][0] + board[y][x]
             if m in {'<-', '^\\', 'v/'}:
-                ny, nx, c, d = y, x-1, '<', carts[y][x][1]
+                ny, nx, c = y, x-1, '<'
             elif m in {'>-', '^/', 'v\\'}:
-                ny, nx, c, d = y, x+1, '>', carts[y][x][1]
+                ny, nx, c = y, x+1, '>'
             elif m in {'v|', '</', '>\\'}:
-                ny, nx, c, d = y+1, x, 'v', carts[y][x][1]
+                ny, nx, c = y+1, x, 'v'
             elif m in {'^|', '<\\', '>/'}:
-                ny, nx, c, d = y-1, x, '^', carts[y][x][1]
-            elif board[y][x] == '+':
-                if carts[y][x][1] == 0:  # left
-                    if carts[y][x][0] == '<':
-                        ny, nx, c, d = y+1, x, 'v', 1
-                    elif carts[y][x][0] == 'v':
-                        ny, nx, c, d = y, x+1, '>', 1
-                    elif carts[y][x][0] == '>':
-                        ny, nx, c, d = y-1, x, '^', 1
-                    elif carts[y][x][0] == '^':
-                        ny, nx, c, d = y, x-1, '<', 1
-                if carts[y][x][1] == 1:  # straight
-                    if carts[y][x][0] == '<':
-                        ny, nx, c, d = y, x-1, '<', 2
-                    elif carts[y][x][0] == 'v':
-                        ny, nx, c, d = y+1, x, 'v', 2
-                    elif carts[y][x][0] == '>':
-                        ny, nx, c, d = y, x+1, '>', 2
-                    elif carts[y][x][0] == '^':
-                        ny, nx, c, d = y-1, x, '^', 2
-                if carts[y][x][1] == 2:  # right
-                    if carts[y][x][0] == '<':
-                        ny, nx, c, d = y-1, x, '^', 0
-                    elif carts[y][x][0] == 'v':
-                        ny, nx, c, d = y, x-1, '<', 0
-                    elif carts[y][x][0] == '>':
-                        ny, nx, c, d = y+1, x, 'v', 0
-                    elif carts[y][x][0] == '^':
-                        ny, nx, c, d = y, x+1, '>', 0
+                ny, nx, c = y-1, x, '^'
+            elif m == '<+':
+                if carts[y][x][1] == 0:
+                    ny, nx, c = y+1, x, 'v'
+                if carts[y][x][1] == 1:
+                    ny, nx, c = y, x-1, '<'
+                if carts[y][x][1] == 2:
+                    ny, nx, c = y-1, x, '^'
+            elif m == 'v+':
+                if carts[y][x][1] == 0:
+                    ny, nx, c = y, x+1, '>'
+                if carts[y][x][1] == 1:
+                    ny, nx, c = y+1, x, 'v'
+                if carts[y][x][1] == 2:
+                    ny, nx, c = y, x-1, '<'
+            elif m == '>+':
+                if carts[y][x][1] == 0:
+                    ny, nx, c = y-1, x, '^'
+                if carts[y][x][1] == 1:
+                    ny, nx, c = y, x+1, '>'
+                if carts[y][x][1] == 2:
+                    ny, nx, c = y+1, x, 'v'
+            elif m == '^+':
+                if carts[y][x][1] == 0:
+                    ny, nx, c = y, x-1, '<'
+                if carts[y][x][1] == 1:
+                    ny, nx, c = y-1, x, '^'
+                if carts[y][x][1] == 2:
+                    ny, nx, c = y, x+1, '>'
+            d = carts[y][x][1] if board[y][x] != '+' else ((carts[y][x][1] + 1) % 3)
+
             if carts[ny][nx] is not None:
                 if crash is None:
                     crash = ','.join((str(nx), str(ny)))
