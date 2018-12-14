@@ -89,9 +89,9 @@ while len(recipes) < ndig:
     r1, r2, e1, e2 = parse()
 while True:
     r1, r2, e1, e2 = parse()
-    if last[1:] == digs:
+    if last[-1] == digs[-1] and last[1:] == digs:
         break
-    if last[:-1] == digs:
+    elif last[-2] == digs[-1] and last[:-1] == digs:
         break
 
 ans = len(recipes) - ndig - (1 if last[:-1] == digs else 0)
