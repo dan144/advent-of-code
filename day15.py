@@ -86,7 +86,7 @@ def show_board(show=False):
     global board
     for line in board:
         print(''.join(map(str, line)))
-    #input()
+    input()
 
 show_board()
 
@@ -98,6 +98,7 @@ while len(elves) and len(goblins):
                 # identify all targets and "in range" points (?)
                 target_locs = []
                 target_array = goblins if type(board[y][x]) == Elf else elves
+                dont = False
                 for target in target_array:
                     tx = target.x
                     ty = target.y
@@ -105,7 +106,25 @@ while len(elves) and len(goblins):
                         if board[ty+yoff][tx+xoff] == '.':
                             target_locs.append((tx+xoff, ty+yoff))
                             board[ty+yoff][tx+xoff] = '?'
+                        if x == tx + xoff and y == ty + yoff:
+                            dont = True
+                            break
+                    else:
+                        continue
+                    break
                 show_board()
+
+                # don't move if there's an enemy right next to you
+                if dont:
+                    for lx, ly in target_locs:
+                        board[ly][lx] = '.'
+                    board[y][x].m = rounds + 1
+                    continue
+
+                # don't move if there's no target locations
+                if not target_locs:
+                    board[y][x].m = rounds + 1
+                    continue
 
                 # find distance to all reachable points (@)
                 dboard = reset_dboard()
@@ -211,7 +230,6 @@ while len(elves) and len(goblins):
 
     rounds += 1
     show_board(show=True)
-    input() #break
 
 print(rounds)
 show_board(show=True)
