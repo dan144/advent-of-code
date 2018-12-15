@@ -121,7 +121,6 @@ while len(elves) and len(goblins):
                     points = npoints
                     d += 1
                 show_board()
-                print(dboard)
 
                 # narrow scope to all nearest points (!)
                 for lx, ly in target_locs:
@@ -138,19 +137,67 @@ while len(elves) and len(goblins):
                         closest_locs.append((lx, ly))
                     else:
                         board[ly][lx] = '.'
-                print(dboard)
-                print(closest_locs)
                 show_board()
 
                 # choose the point
                 min_y = min(closest_locs, key=lambda x: x[1])[1]
-                print(min_y)
                 chosen = sorted((list(filter(lambda x: x[1] == min_y, closest_locs))))[0]
                 for lx, ly in closest_locs:
                     if (lx, ly) == chosen:
                         board[ly][lx] = '+'
                     else:
                         board[ly][lx] = '.'
+                show_board()
+                board[chosen[1]][chosen[0]] = '.'  # clean the board up
+
+                # find a path to that point
+                dboard = reset_dboard()
+                points = [chosen]
+                d = 0
+                while points:
+                    npoints = []
+                    for point in points:
+                        px, py = point
+                        if d > 0:
+                            dboard[py][px] = d
+                            if str(board[py][px]) == '?':
+                                board[py][px] = '@'
+
+                        for xoff, yoff in {(-1, 0), (0, -1), (0, 1), (1, 0)}:
+                            if not dboard[py+yoff][px+xoff] and str(board[py+yoff][px+xoff]) in '.?' and not (x == px + xoff and y == py + yoff):
+                                npoints.append((px+xoff, py+yoff))
+                    points = npoints
+                    d += 1
+                    if (x, y) in points:
+                        break
+
+                # find all moves that minimize distance
+                min_d = None
+                moves = []
+                for xoff, yoff in {(-1, 0), (0, -1), (0, 1), (1, 0)}:
+                    d = dboard[y+yoff][x+xoff]
+                    if d is None or d == 0:
+                        continue
+                    if min_d is None or d < min_d:
+                        min_d = d
+                        moves = [(x+xoff, y+yoff)]
+                    elif d == min_d:
+                        moves.append((x+xoff, y+yoff))
+
+                # choose first move in that read
+                min_y = min(moves, key=lambda x: x[1])[1]
+                chosen_move = sorted((list(filter(lambda x: x[1] == min_y, moves))))[0]
+
+                # move the person
+                cx = chosen_move[0]
+                cy = chosen_move[1]
+                me = board[y][x]
+
+                me.x = cx
+                me.y = cy
+                board[cy][cx] = me
+                board[y][x] = '.'
+
                 break
         else:
             continue
