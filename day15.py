@@ -38,6 +38,7 @@ AP = 3
 class Goblin():
     def __init__(self, x, y):
         self.hp = HP
+        self.m = 0
         self.x = x
         self.y = y
     def __str__(self):
@@ -45,6 +46,7 @@ class Goblin():
 class Elf():
     def __init__(self, x, y):
         self.hp = HP
+        self.m = 0
         self.x = x
         self.y = y
     def __str__(self):
@@ -78,17 +80,21 @@ def reset_dboard():
             dboard[-1].append(None if str(board[y][x]) in 'EG#' else 0)
     return dboard
 
-def show_board():
+def show_board(show=False):
+    if not show:
+        return
     global board
     for line in board:
         print(''.join(map(str, line)))
+    #input()
 
 show_board()
 
+rounds = 0
 while len(elves) and len(goblins):
     for y in range(len(board)):
         for x in range(len(board[0])):
-            if type(board[y][x]) in {Goblin, Elf}:
+            if type(board[y][x]) in {Goblin, Elf} and board[y][x].m == rounds:
                 # identify all targets and "in range" points (?)
                 target_locs = []
                 target_array = goblins if type(board[y][x]) == Elf else elves
@@ -184,6 +190,10 @@ while len(elves) and len(goblins):
                     elif d == min_d:
                         moves.append((x+xoff, y+yoff))
 
+                # determine if this one can move
+                if len(moves) == 0:
+                    continue
+
                 # choose first move in that read
                 min_y = min(moves, key=lambda x: x[1])[1]
                 chosen_move = sorted((list(filter(lambda x: x[1] == min_y, moves))))[0]
@@ -195,16 +205,16 @@ while len(elves) and len(goblins):
 
                 me.x = cx
                 me.y = cy
+                me.m = rounds + 1
                 board[cy][cx] = me
                 board[y][x] = '.'
 
-                break
-        else:
-            continue
-        break
-    break
+    rounds += 1
+    show_board(show=True)
+    input() #break
 
-show_board()
+print(rounds)
+show_board(show=True)
 print(ans)
 if testing:
     if part_one == ans:
