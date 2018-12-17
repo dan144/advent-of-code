@@ -79,7 +79,6 @@ def add_water(source, y=None):
 
     ns = []
     sx = source[0]
-    changed = False
 
     if y is None:
         y = source[1]
@@ -107,55 +106,39 @@ def add_water(source, y=None):
         below = board[y+1][mx:xx+1]
         if all([v in '~#' for v in below]):
             for x in range(mx+1, xx):
-                if board[y][x] == '.':
-                    changed = True
                 board[y][x] = '~'
             return add_water(source, y-1)
 
     for x in range(sx-1, mx if mx is not None else -1, -1):
         if board[y][x] == '.':
             board[y][x] = '|'
-            changed = True
         if board[y+1][x] == '.':
-            if (x+1, y) in old:  # Boy this is hacky
-                old.add((x, y))
-                board[y][x] = '.'
-            else:
-                ns.append((x, y))
+            ns.append((x, y))
+            break
+        elif board[y+1][x] == '|':
             break
     for x in range(sx, xx if xx is not None else len(board[y+1])):
         if board[y][x] == '.':
             board[y][x] = '|'
-            changed = True
         if board[y+1][x] == '.':
-            if (x-1, y) in old:  # seriouesly, what a hack
-                old.add((x, y))
-                board[y][x] = '.'
-            else:
-                ns.append((x, y))
+            ns.append((x, y))
+            break
+        elif board[y+1][x] == '|':
             break
 
-    if ns:
-        return ns
-    return False
-    return changed
+    return ns if ns else False
 
 
 old = set()
 while sources:
     r = add_water(sources[0])
+    sources.extend([s for s in r if s not in old and s not in sources] if r else [])
+    old.add(sources.pop(0))
+
     if testing:
         for line in board:
             print(''.join(line))
         print()
-
-    if type(r) == list:
-        old.add(sources.pop(0))
-        for s in r:
-            if s not in old and s not in sources:
-                sources.append(s)
-    elif r == False:
-        old.add(sources.pop(0))
 
 ans2 = 0
 for line in board:
@@ -164,6 +147,7 @@ for line in board:
             ans2 += 1
         if c == '|':
             ans += 1
+
 ans += ans2
 print(ans)
 if testing:
