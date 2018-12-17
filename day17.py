@@ -61,7 +61,6 @@ for line in inputs:
         for y in range(y0, y1+1):
             points.add((x, y))
 
-print(minx, maxx, miny, maxy)
 sources = [(501 - minx, 0)]
 
 board = []
@@ -76,7 +75,7 @@ for y in range(miny, maxy+1):
 
 
 def add_water(source, y=None):
-    global minx, board, ans
+    global minx, board
 
     ns = []
     sx = source[0]
@@ -86,14 +85,11 @@ def add_water(source, y=None):
         y = source[1]
         if board[y][sx] == '.':
             board[y][sx] = '|'
-            ans += 1
         while board[y][sx] not in '~#' and y < len(board) - 1:
             if board[y+1][sx] == '.':
                 board[y+1][sx] = '|'
-                ans += 1
             y += 1
         if y == len(board) - 1 and board[y][sx] != '#':
-            print('n')
             return False
         y -= 1
 
@@ -112,46 +108,33 @@ def add_water(source, y=None):
         if all([v in '~#' for v in below]):
             for x in range(mx+1, xx):
                 if board[y][x] == '.':
-                    ans += 1
                     changed = True
                 board[y][x] = '~'
             return add_water(source, y-1)
 
-    print(mx, sx, xx)
     for x in range(sx-1, mx if mx is not None else -1, -1):
-        if x == 204 and y == 236:
-            print(''.join(board[y]))
-            print(''.join(board[y+1]))
         if board[y][x] == '.':
             board[y][x] = '|'
-            ans += 1
             changed = True
         if board[y+1][x] == '.':
-            if (x+1, y) in old:
+            if (x+1, y) in old:  # Boy this is hacky
                 old.add((x, y))
                 board[y][x] = '.'
-                ans -= 1
             else:
                 ns.append((x, y))
             break
     for x in range(sx, xx if xx is not None else len(board[y+1])):
-        if x == 204 and y == 236:
-            print(''.join(board[y]))
-            print(''.join(board[y+1]))
         if board[y][x] == '.':
             board[y][x] = '|'
-            ans += 1
             changed = True
         if board[y+1][x] == '.':
-            if (x-1, y) in old:
+            if (x-1, y) in old:  # seriouesly, what a hack
                 old.add((x, y))
                 board[y][x] = '.'
-                ans -= 1
             else:
                 ns.append((x, y))
             break
 
-    print(ns)
     if ns:
         return ns
     return False
@@ -162,49 +145,36 @@ old = set()
 while sources:
     r = add_water(sources[0])
     if testing:
-        print(sources[0], ans)
         for line in board:
             print(''.join(line))
+        print()
 
-    #print(sources, ans)
     if type(r) == list:
         old.add(sources.pop(0))
         for s in r:
             if s not in old and s not in sources:
-                print(s)
                 sources.append(s)
     elif r == False:
         old.add(sources.pop(0))
 
-print(sorted(old, key=lambda x: x[1]))
-i = 0
 ans2 = 0
-ps = 0
 for line in board:
     for c in line:
-        if c in '~|':
+        if c in '~':
             ans2 += 1
-        elif c == '#':
-            ps += 1
-    i += 1
-    print(''.join(line))
-    if i % 50 == 0:
-        input()
+        if c == '|':
+            ans += 1
+ans += ans2
 print(ans)
-print(ans2)
-print(p1, ps)
 if testing:
     if part_one == ans:
         print('PART ONE CORRECT')
     else:
         print('PART ONE FAILED')
 
-
 print()
 print('PART TWO')
-ans = None
-
-
+ans = ans2
 
 print(ans)
 if testing:
