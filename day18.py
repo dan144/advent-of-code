@@ -33,45 +33,46 @@ board = []
 for line in inputs:
     board.append(list(line))
 
-for line in board:
-    print(''.join(line))
+if testing:
+    for line in board:
+        print(''.join(line))
 
 vals = []
+wooded = 0
+lumber = 0
 for t in range(1, 1000):  # does not need to be all of 1000000000, just enough to force a cycle
+    wooded = 0
+    lumber = 0
+
     n = []
     for y in range(len(board)):
         n.append([])
         for x in range(len(board[0])):
-            wooded = 0
-            lumber = 0
+            w = 0
+            l = 0
             for j in range(max(0, y-1), min(len(board)-1, y+1)+1):
                 for i in range(max(0, x-1), min(len(board[0])-1, x+1)+1):
                     if j == y and i == x:
                         continue
                     if board[j][i] == '|':
-                        wooded += 1
+                        w += 1
                     elif board[j][i] == '#':
-                        lumber += 1
+                        l += 1
 
-            if board[y][x] == '.' and wooded >= 3:
+            if board[y][x] == '.' and w >= 3:
                 n[-1].append('|')
-            elif board[y][x] == '|' and lumber >= 3:
+                wooded += 1
+            elif board[y][x] == '|' and l >= 3:
                 n[-1].append('#')
-            elif board[y][x] == '#' and (lumber == 0 or wooded == 0):
+                lumber += 1
+            elif board[y][x] == '#' and (l == 0 or w == 0):
                 n[-1].append('.')
             else:
                 n[-1].append(board[y][x])
+                wooded += 1 if board[y][x] == '|' else 0
+                lumber += 1 if board[y][x] == '#' else 0
     board = n
 
-    wooded = 0
-    lumber = 0
-    for line in board:
-        for c in line:
-            if c == '|':
-                wooded += 1
-            elif c == '#':
-                lumber += 1
-    
     vals.append(wooded * lumber)
     if t == 10:
         ans = vals[-1]
@@ -83,6 +84,7 @@ for t in range(1, 1000):  # does not need to be all of 1000000000, just enough t
                 print('PART ONE CORRECT')
             else:
                 print('PART ONE FAILED')
+
     if t > 0 and t % 50 == 0:
         print('Computed', t, 'minutes')
 
