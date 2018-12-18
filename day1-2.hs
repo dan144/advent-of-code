@@ -2,12 +2,17 @@ module Main where
 
 import Data.List
 import Data.List.Split
-import Lib
 
 main :: IO ()
 main = do
-    contents <- readFile "input"
+    print $ "Run a daily module, dayN"
+
+day1 = do
+    contents <- readFile "input/1"
+
+    print $ "PART ONE"
     print $ sum $ map converter contents
+    print $ "PART TWO"
     print $ find_basement contents
 
 find_basement contents = length $ takeWhile (/= (-1)) $ scanl (+) 0 $ map converter contents
@@ -15,8 +20,8 @@ converter '(' = 1
 converter ')' = -1
 converter _ = 0
 
-main2 = do
-    contents <- readFile "input2"
+day2 = do
+    contents <- readFile "input/2"
     print $ sum $ map wrapping_paper $ splitOn "\n" contents
     print $ sum $ map ribbon $ splitOn "\n" contents
 
