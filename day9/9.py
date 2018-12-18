@@ -46,5 +46,5 @@ for path in perms:
         minn = l
     if maxn is None or l > maxn:
         maxn = l
-print(minn)
-print(maxn)
+print('Min:', minn)
+print('Max:', maxn)
