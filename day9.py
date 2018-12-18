@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 i = []
-with open('input','r') as f:
+with open('input/9','r') as f:
     for line in f:
         l = line.split()
         i.append((l[0], l[2], l[4]))
@@ -12,18 +12,14 @@ for line in i:
         ends[line[0]] = len(ends.keys())
     if line[1] not in ends.keys():
         ends[line[1]] = len(ends.keys())
-print(ends)
 
 m = []
 for c in range(len(ends.keys())):
     m.append([0] * len(ends.keys()))
 
 for line in i:
-    print(ends[line[0]])
-    print(ends[line[1]])
     m[ends[line[0]]][ends[line[1]]] = int(line[2])
     m[ends[line[1]]][ends[line[0]]] = int(line[2])
-print(m)
 
 import itertools
 
@@ -39,12 +35,17 @@ def p_len(path):
 minn = None
 maxn = None
 perms = list(itertools.permutations(list(ends.values())))
-print(len(perms))
 for path in perms:
     l = p_len(path)
     if minn is None or l < minn:
         minn = l
     if maxn is None or l > maxn:
         maxn = l
+
+print()
+print('PART ONE')
 print('Min:', minn)
+
+print()
+print('PART TWO')
 print('Max:', maxn)
