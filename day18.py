@@ -35,26 +35,20 @@ for line in inputs:
 
 for line in board:
     print(''.join(line))
-for t in range(1, 1000000001):
+
+vals = []
+for t in range(1, 1000):  # does not need to be all of 1000000000, just enough to force a cycle
     n = []
     for y in range(len(board)):
         n.append([])
         for x in range(len(board[0])):
-            minx = max(0, x-1)
-            maxx = min(len(board[0])-1, x+1)
-            miny = max(0, y-1)
-            maxy = min(len(board)-1, y+1)
-
             wooded = 0
             lumber = 0
-            o = 0
-            for j in range(miny, maxy+1):
-                for i in range(minx, maxx+1):
+            for j in range(max(0, y-1), min(len(board)-1, y+1)+1):
+                for i in range(max(0, x-1), min(len(board[0])-1, x+1)+1):
                     if j == y and i == x:
                         continue
-                    if board[j][i] == '.':
-                        o +=1
-                    elif board[j][i] == '|':
+                    if board[j][i] == '|':
                         wooded += 1
                     elif board[j][i] == '#':
                         lumber += 1
@@ -69,18 +63,18 @@ for t in range(1, 1000000001):
                 n[-1].append(board[y][x])
     board = n
 
+    wooded = 0
+    lumber = 0
+    for line in board:
+        for c in line:
+            if c == '|':
+                wooded += 1
+            elif c == '#':
+                lumber += 1
+    
+    vals.append(wooded * lumber)
     if t == 10:
-        wooded = 0
-        lumber = 0
-        for line in board:
-            for c in line:
-                if c == '|':
-                    wooded += 1
-                elif c == '#':
-                    lumber += 1
-        
-        ans = wooded * lumber
-
+        ans = vals[-1]
         print()
         print('PART ONE')
         print(t, ans)
@@ -89,26 +83,23 @@ for t in range(1, 1000000001):
                 print('PART ONE CORRECT')
             else:
                 print('PART ONE FAILED')
+    if t > 0 and t % 50 == 0:
+        print('Computed', t, 'minutes')
 
-    if (t-20) % 28 == 0: # This is hacky, improve this detection
-        # basically every 28 iterations it repeats, and 1000000000 % 28 == 20, so offset it by that
-        wooded = 0
-        lumber = 0
-        for line in board:
-            for c in line:
-                if c == '|':
-                    wooded += 1
-                elif c == '#':
-                    lumber += 1
-        
-        ans = wooded * lumber
-        print(t, ans)
+cycle = 1
+while vals[-1] != vals[-1-cycle]:
+    cycle += 1
+first = 1000000000 % cycle - 1
+t_ans = (int(len(vals)/cycle) - 1) * cycle + first
+ans = vals[t_ans]
 
-        print()
-        print('PART TWO')
-        
-        if testing:
-            if part_two == ans:
-                print('PART TWO CORRECT')
-            else:
-                print('PART TWO FAILED')
+print()
+print('PART TWO')
+print('Values repeat every:', cycle)
+print('1000000000', ans)
+
+if testing:
+    if part_two == ans:
+        print('PART TWO CORRECT')
+    else:
+        print('PART TWO FAILED')
