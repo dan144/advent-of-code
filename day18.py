@@ -29,17 +29,13 @@ with open(input_file, 'r') as f:
 if testing:
     print(inputs)
 
-print()
-print('PART ONE')
-ans = None
-
 board = []
 for line in inputs:
     board.append(list(line))
 
 for line in board:
     print(''.join(line))
-for t in range(10):
+for t in range(1, 1000000001):
     n = []
     for y in range(len(board)):
         n.append([])
@@ -53,7 +49,6 @@ for t in range(10):
             lumber = 0
             o = 0
             for j in range(miny, maxy+1):
-                print(''.join(board[j][minx:maxx+1]))
                 for i in range(minx, maxx+1):
                     if j == y and i == x:
                         continue
@@ -74,35 +69,46 @@ for t in range(10):
                 n[-1].append(board[y][x])
     board = n
 
-wooded = 0
-lumber = 0
-for line in board:
-    print(''.join(line))
-    for c in line:
-        if c == '|':
-            wooded += 1
-        elif c == '#':
-            lumber += 1
+    if t == 10:
+        wooded = 0
+        lumber = 0
+        for line in board:
+            for c in line:
+                if c == '|':
+                    wooded += 1
+                elif c == '#':
+                    lumber += 1
+        
+        ans = wooded * lumber
 
-print(wooded, lumber)
-ans = wooded * lumber
-print(ans)
-if testing:
-    if part_one == ans:
-        print('PART ONE CORRECT')
-    else:
-        print('PART ONE FAILED')
+        print()
+        print('PART ONE')
+        print(t, ans)
+        if testing:
+            if part_one == ans:
+                print('PART ONE CORRECT')
+            else:
+                print('PART ONE FAILED')
 
+    if (t-20) % 28 == 0: # This is hacky, improve this detection
+        # basically every 28 iterations it repeats, and 1000000000 % 28 == 20, so offset it by that
+        wooded = 0
+        lumber = 0
+        for line in board:
+            for c in line:
+                if c == '|':
+                    wooded += 1
+                elif c == '#':
+                    lumber += 1
+        
+        ans = wooded * lumber
+        print(t, ans)
 
-print()
-print('PART TWO')
-ans = None
-
-
-
-print(ans)
-if testing:
-    if part_two == ans:
-        print('PART TWO CORRECT')
-    else:
-        print('PART TWO FAILED')
+        print()
+        print('PART TWO')
+        
+        if testing:
+            if part_two == ans:
+                print('PART TWO CORRECT')
+            else:
+                print('PART TWO FAILED')
