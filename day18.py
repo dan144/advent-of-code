@@ -33,8 +33,59 @@ print()
 print('PART ONE')
 ans = None
 
+board = []
+for line in inputs:
+    board.append(list(line))
 
+for line in board:
+    print(''.join(line))
+for t in range(10):
+    n = []
+    for y in range(len(board)):
+        n.append([])
+        for x in range(len(board[0])):
+            minx = max(0, x-1)
+            maxx = min(len(board[0])-1, x+1)
+            miny = max(0, y-1)
+            maxy = min(len(board)-1, y+1)
 
+            wooded = 0
+            lumber = 0
+            o = 0
+            for j in range(miny, maxy+1):
+                print(''.join(board[j][minx:maxx+1]))
+                for i in range(minx, maxx+1):
+                    if j == y and i == x:
+                        continue
+                    if board[j][i] == '.':
+                        o +=1
+                    elif board[j][i] == '|':
+                        wooded += 1
+                    elif board[j][i] == '#':
+                        lumber += 1
+
+            if board[y][x] == '.' and wooded >= 3:
+                n[-1].append('|')
+            elif board[y][x] == '|' and lumber >= 3:
+                n[-1].append('#')
+            elif board[y][x] == '#' and (lumber == 0 or wooded == 0):
+                n[-1].append('.')
+            else:
+                n[-1].append(board[y][x])
+    board = n
+
+wooded = 0
+lumber = 0
+for line in board:
+    print(''.join(line))
+    for c in line:
+        if c == '|':
+            wooded += 1
+        elif c == '#':
+            lumber += 1
+
+print(wooded, lumber)
+ans = wooded * lumber
 print(ans)
 if testing:
     if part_one == ans:
