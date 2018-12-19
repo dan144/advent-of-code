@@ -3,6 +3,8 @@
 import json
 import sys
 
+from functools import reduce
+
 print('Running:',sys.argv[0])
 
 testing = len(sys.argv) == 2
@@ -93,10 +95,8 @@ ip = 0
 while ip in range(len(ins)):
     r[ipr] = ip
     i = ins[ip]
-    #r[i[3]] = getattr('day19.py', i[0])(r, i)
     r[i[3]] = locals()[i[0]](r, i)
     ip = r[ipr] + 1
-    print(ip, r)
 
 ans = r[0]
 print(ans)
@@ -111,7 +111,23 @@ print()
 print('PART TWO')
 ans = None
 
+#  taken from here: https://stackoverflow.com/a/6800214
+def factors(n):
+    return set(reduce(list.__add__, ([i, n//i] for i in range(1, int(n**0.5) + 1) if n % i == 0)))
 
+#  After analyzing the command set, it turns out this program is designed to sum
+#  the factors of the number stored in r2 when the instruction pointer reaches 1
+
+r = [1,0,0,0,0,0]
+
+ip = 0
+while ip != 1:
+    r[ipr] = ip
+    i = ins[ip]
+    r[i[3]] = locals()[i[0]](r, i)
+    ip = r[ipr] + 1
+
+ans = sum(factors(r[2]))
 
 print(ans)
 if testing:
