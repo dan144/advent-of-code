@@ -26,7 +26,6 @@ executable day1
   main-is: day1.hs
   build-depends:
       base >=4.7 && <5
-    , split
   default-language: Haskell2010
 
 executable day2
@@ -34,6 +33,13 @@ executable day2
   build-depends:
       base >=4.7 && <5
     , split
+  default-language: Haskell2010
+
+executable day3
+  main-is: day3.hs
+  build-depends:
+      base >=4.7 && <5
+    , sort
   default-language: Haskell2010
 
 -- test-suite aoc-test

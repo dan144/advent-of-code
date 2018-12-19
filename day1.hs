@@ -1,8 +1,5 @@
 module Main where
 
-import Data.List
-import Data.List.Split
-
 main :: IO ()
 main = do
     contents <- readFile "input/1"
