@@ -134,6 +134,8 @@ def parse(paths, x, y):
                     oposy = pos[1]
                 dx, dy = parse(p, dx, dy)
                 if type(p) is list:
+                    # this is wrong; rather than reseting x/y, x/y should continue from all new endpoints
+                    # but apparently this doesn't manifest on sufficiently large inputs if all you want is furthest room
                     dx = ox + pos[0] - oposx
                     dy = oy + pos[1] - oposy
             x += pos[0] - aposx

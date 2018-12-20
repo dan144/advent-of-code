@@ -10,3 +10,6 @@
 
 ^WNE$
 3
+
+^(W|E)S$
+should be 2 but my solution gives 1
