@@ -206,17 +206,20 @@ draw_board()
 reachable = [pos]
 seen = {(pos[0], pos[1])}
 try:
-    i = 0
-    ans = -1
+    dist = 0
+    max_dist = -1
+    beyond_1k = 0
     while type(reachable) is list:
-        i += 1
         reachable = move_from(reachable, 0)
-        ans += 1
+        dist += 1
+        if dist >= 1000 and type(reachable) is list:
+            beyond_1k += len(reachable)
+        max_dist += 1
 except:
     raise
     sys.exit(1)
 
-print(pos)
+ans = max_dist
 print(ans)
 if testing:
     if part_one == ans:
@@ -226,10 +229,8 @@ if testing:
 
 print()
 print('PART TWO')
-ans = None
 
-
-
+ans = beyond_1k
 print(ans)
 if testing:
     if part_two == ans:
