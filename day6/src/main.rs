@@ -1,4 +1,5 @@
 use regex::Regex;
+use std::panic;
 
 type Coord = (usize, usize);
 
@@ -38,6 +39,27 @@ fn run(grid : &mut Array2<usize>, action : &Action) {
     }
 }
 
+fn run2(grid : &mut Array2<isize>, action : &Action) {
+    use itertools::Itertools;
+    let rect = match action {
+        Action::TurnOn(rect) => rect,
+        Action::TurnOff(rect) => rect,
+        Action::Toggle(rect) => rect,
+    };
+    let range = (rect.tl.0..=rect.br.0).cartesian_product(rect.tl.1..=rect.br.1);
+    for loc in range {
+        let mut spot = grid.get_mut(loc).unwrap();
+        match action {
+            Action::TurnOn(_) => *spot += 1,
+            Action::TurnOff(_) => *spot -= 1,
+            Action::Toggle(_) => *spot += 2,
+        }
+        if *spot < 0 {
+            *spot = 0;
+        }
+    }
+}
+
 fn main() -> std::io::Result<()> {
     use std::fs::File;
     let mut file = File::open("6")?;
@@ -62,12 +84,18 @@ fn main() -> std::io::Result<()> {
 
     assert_eq!(buf.lines().count(), actions.len());
 
+    println!("PART ONE");
     let mut grid = Array2::<usize>::zeros((1000, 1000));
-
     for a in actions.iter() {
         run(&mut grid, a);
     }
+    println!("{}", grid.sum());
 
+    println!("PART TWO");
+    let mut grid = Array2::<isize>::zeros((1000, 1000));
+    for a in actions.iter() {
+        run2(&mut grid, a);
+    }
     println!("{}", grid.sum());
 
     Ok(())
