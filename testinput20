@@ -1,1 +1,9 @@
-{"part_one": 0, "part_two": 0}
+{"part_one": 31, "part_two": 0}
+^ENWWW(NEEE|SSE(EE|N))$
+^ESSWWN(E|NNENN(EESS(WNSE|)SSS|WWWSSSSE(SW|NNNE)))$
+^WSSEESWWWNW(S|NENNEEEENN(ESSSSW(NWSW|SSEN)|WSWWN(E|WWS(E|SS))))$
+^WNE$
+
+FAILS
+219 - too low
+941 - too low
