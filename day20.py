@@ -33,61 +33,24 @@ print()
 print('PART ONE')
 ans = None
 
-def nest(level):
-    global parsed, x
+def nest():
     global inp
     p = [[]]
-    #print(p[0])
     while inp:
         c = inp.pop(0)
-        parsed += 1
-        #print(level, c)
         if c in 'NEWS':
             p[-1].append(c)
         elif c == '(':
-            x[0] += 1
-            if False and level < 3:
-                input()
-            p[-1].append([nest(level+1)])
-            #h1 = nest(level+1)
-            #h2 = nest(level+1)
-            #p.append([h1, h2])
+            p[-1].append([nest()])
         elif c == ')':
-            x[1] += 1
-            if False and level < 3:
-                input()
             break
-            #return paths
         elif c == '|':
-            x[2] += 1
             p.append([])
-            #if level < 3:
-            #    input()
-            #break
-            #return paths
-        else:
-            print('AGH')
-    #print('NAW')
-    #input()
     return p
 
 
-parsed = 0
 inp = list(inputs[0][1:-1])
-x = [0,0,0]
-#for c in inp:
-#    if c == '(':
-#        x[0] += 1
-#    elif c == ')':
-#        x[1] += 1
-#    elif c == '|':
-#        x[2] += 1
-todo = len(inp)
-paths = nest(0)
-#print(paths)
-print(x)
-#print(''.join(paths))
-print(todo, parsed, len(inp))
+paths = nest()
 
 board = [[[False, False, False, False]]]
 N = 0
@@ -106,22 +69,24 @@ def draw_board():
     print()
 
 
-def parse(paths, x, y, level):
+def parse(paths, x, y):
     global board, pos
-    global levels
     ax = x
     ay = y
     ox = None
     oy = None
-    #d = [0, 0]
     for v in paths:
-        #print(x, y, v)
+        # if v is a letter: set x/y's door in that direction open,
+        # check if moving that way is possible (if not extend the board),
+        # set the new position's return door to open, modify x/y appropriately
+        #
+        # if the board changes size, your original position must change, as
+        # well as x/y potentially not simply incrementing/decrementing
         if v == 'N':
             board[y][x][N] = True
             if y == 0:
                 board.insert(0, [])
                 pos[1] += 1
-                #d[1] += 1
                 for dx in range(len(board[1])):
                     board[0].append([False] * 4)
             else:
@@ -138,7 +103,6 @@ def parse(paths, x, y, level):
             board[y][x][W] = True
             if x == 0:
                 pos[0] += 1
-                #d[0] += 1
                 for dy in range(len(board)):
                     board[dy].insert(0, [False] * 4)
             else:
@@ -153,73 +117,69 @@ def parse(paths, x, y, level):
             y += 1
             board[y][x][N] = True
         else:
-            ax = x
-            ay = y
+            # after execution of all subpieces of thel ist, x/y should be restored
+            # to their original values. In addition, any change in pos (your position)
+            # must be considered, as it indicates that the board has grown N/W and
+            # x/y must change accordingly
             aposx = pos[0]
             aposy = pos[1]
+            dx = x
+            dy = y
             for p in v:
+                # if p is a list, then it's a split; x/y should be reset when it's done
                 if type(p) is list:
-                    ox = x
-                    oy = y
+                    ox = dx
+                    oy = dy
                     oposx = pos[0]
                     oposy = pos[1]
-                #print('OK', p, ox, oy)
-                x, y = parse(p, x, y, level + 1)
+                dx, dy = parse(p, dx, dy)
                 if type(p) is list:
-                    x = ox + pos[0] - oposx
-                    y = oy + pos[1] - oposy
-                #print('DONE', x, y, ox, oy)
-            #print('LEVELDONE')
-            x = ax + pos[0] - aposx
-            y = ay + pos[1] - aposy
+                    dx = ox + pos[0] - oposx
+                    dy = oy + pos[1] - oposy
+            x += pos[0] - aposx
+            y += pos[1] - aposy
 
-        #draw_board()
-        #print(pos, level, x, y)
-        #input()
-    #return d
     return x, y
 
 pos = [0, 0]
-parse(paths, 0, 0, 0)
+parse(paths, 0, 0)
 
 dirs = [[0, W, 0],
         [N, 0, S],
         [0, E, 0]]
 
-def move_from(reachable, distance):
+
+def move_from(reachable):
     global seen
     n = []
     for spot in reachable:
         x, y = spot
-        for dx, dy in {(-1, 0), (0, -1), (0, 1), (1, 0)}:
+        for dx, dy in {(-1, 0), (0, -1), (0, 1), (1, 0)}:  # each cardinal direction
+            # check if on the board
             if y + dy in range(len(board)) and x + dx in range(len(board[0])):
                 p = (x + dx, y + dy)
+                # check not seen and there's a
                 if p not in seen and board[y][x][dirs[dx+1][dy+1]]:
+                    # it has now been seen and is reachable in the next round
                     seen.add(p)
                     n.append(p)
-    print(n)
-    return n if n else distance
-    return move_from(n, distance+1) if n else distance
+    return n
 
-draw_board()
+if testing:
+    draw_board()
 
 reachable = [pos]
 seen = {(pos[0], pos[1])}
-try:
-    dist = 0
-    max_dist = -1
-    beyond_1k = 0
-    while type(reachable) is list:
-        reachable = move_from(reachable, 0)
-        dist += 1
-        if dist >= 1000 and type(reachable) is list:
-            beyond_1k += len(reachable)
-        max_dist += 1
-except:
-    raise
-    sys.exit(1)
 
-ans = max_dist
+dist = 0
+beyond_1k = 0
+while reachable:
+    reachable = move_from(reachable)
+    dist += 1
+    if dist >= 1000:
+        beyond_1k += len(reachable)
+
+ans = dist - 1
 print(ans)
 if testing:
     if part_one == ans:
