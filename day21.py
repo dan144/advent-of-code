@@ -2,6 +2,7 @@
 
 import json
 import sys
+import time
 
 print('Running:',sys.argv[0])
 
@@ -30,28 +31,28 @@ if testing:
     print(inputs)
 
 def addr(b, o):
-    return (b[o[1]] + b[o[2]])
+    return b[o[1]] + b[o[2]]
 
 def addi(b, o):
-    return (b[o[1]] + o[2])
+    return b[o[1]] + o[2]
     
 def mulr(b, o):
-    return (b[o[1]] * b[o[2]])
+    return b[o[1]] * b[o[2]]
     
 def muli(b, o):
-    return (b[o[1]] * o[2])
+    return b[o[1]] * o[2]
 
 def banr(b, o):
-    return (b[o[1]] & b[o[2]])
+    return b[o[1]] & b[o[2]]
 
 def bani(b, o):
-    return (b[o[1]] & o[2])
+    return b[o[1]] & o[2]
 
 def borr(b, o):
-    return (b[o[1]] | b[o[2]])
+    return b[o[1]] | b[o[2]]
 
 def bori(b, o):
-    return (b[o[1]] | o[2])
+    return b[o[1]] | o[2]
 
 def setr(b, o):
     return b[o[1]]
@@ -60,26 +61,22 @@ def seti(b, o):
     return o[1]
 
 def gtir(b, o):
-    return (1 if (o[1] > b[o[2]]) else 0)
+    return int(o[1] > b[o[2]])
 
 def gtri(b, o):
-    return (1 if (b[o[1]] > o[2]) else 0)
+    return int(b[o[1]] > o[2])
 
 def gtrr(b, o):
-    return (1 if (b[o[1]] > b[o[2]]) else 0)
+    return int(b[o[1]] > b[o[2]])
 
 def eqir(b, o):
-    return (1 if (o[1] == b[o[2]]) else 0)
+    return int(o[1] == b[o[2]])
 
 def eqri(b, o):
-    return (1 if (b[o[1]] == o[2]) else 0)
+    return int(b[o[1]] == o[2])
 
 def eqrr(b, o):
     return (1 if (b[o[1]] == b[o[2]]) else 0)
-
-print()
-print('PART ONE')
-ans = None
 
 ipr = int(inputs.pop(0).split()[1])
 ins = []
@@ -87,59 +84,34 @@ for line in inputs:
     i = line.split(' ', 4)[:4]
     ins.append((i[0], int(i[1]), int(i[2]), int(i[3])))
 
-minn = None
-catchemall = set()
-def run_with_init(r0):
-    global minn
-    global catchemall
-    r = [r0, 0, 0, 0, 0, 0]
-    ip = 0
-    ic = 0
-    while ip in range(len(ins)):
-        ic += 1
-        r[ipr] = ip
-        i = ins[ip]
-        r[i[3]] = globals()[i[0]](r, i)
-        ip = r[ipr] + 1
-        #print(r)
-        if ip == 28:
-            print(r[3])
-            sys.exit(1)
-            catchemall.add(r[3])
-            if minn is None or sorted(catchemall)[0] < minn:
-                minn = sorted(catchemall)[0]
-                print(ic, r, minn)
-        print(ip, r)
-        if ip in {13}: #{8,13,28}:
-            input()
-    print(ic)
-    return True
-    print('Done: r[0]={}, ic={}'.format(r0, ic))
-    if minr[1] is None or ic < minr[1]:
-        minr = [r0, ic]
-    elif ic == minr[1] and r0 < minr[0]:
-        minr = [r0, ic]
+#  run the elfcode for this problem
+#  if partOne, return the first found value. if not, return the last
+#  this is extremely slow because this simulator is incredibly inefficient
+def run(partOne):
+    catchemall = set()
+    r = [0, 0, 0, 0, 0, 0]
+    ins_c = len(ins)
 
-# FAIL: 8563139
-# FAIL: 105934
-# FAIL: 1634
-r0 = 1634
-while not run_with_init(r0):
-    r0 += 1
-    print(r0)
-sys.exit(0)
-import threading
-threads = []
-for r0 in range(1):
-    t = threading.Thread(target=run_with_init, args=(r0,))
-    print('Starting thread with r0={}'.format(r0))
-    t.start()
-    threads.append(t)
-for t in threads:
-    t.join()
+    last_found = time.time()
+    while r[ipr] < ins_c:
+        r[ins[r[ipr]][3]] = globals()[ins[r[ipr]][0]](r, ins[r[ipr]])
+        r[ipr] += 1
+        if r[ipr] == 28:
+            if r[3] not in catchemall:
+                print(r[3])
+                last_found = time.time()  # reset time last val was found
+                if partOne:
+                    return r[3]
+                catchemall.add(r[3])
+        # if it takes more than 5s to find the next acceptable value, assume you're done
+        if time.time() - last_found > 5:
+            return sorted(catchemall)[-1]
 
+print()
+print('PART ONE')
 
-ans = minr[0]
+ans = run(True)
+
 print(ans)
 if testing:
     if part_one == ans:
@@ -147,12 +119,10 @@ if testing:
     else:
         print('PART ONE FAILED')
 
-
 print()
 print('PART TWO')
-ans = None
 
-
+ans = run(False)
 
 print(ans)
 if testing:
