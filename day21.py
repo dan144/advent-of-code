@@ -98,10 +98,10 @@ def run(partOne):
         r[ipr] += 1
         if r[ipr] == 28:
             if r[3] not in catchemall:
-                print(r[3])
                 last_found = time.time()  # reset time last val was found
                 if partOne:
                     return r[3]
+                print(' {}    \r'.format(r[3]), end='')
                 catchemall.add(r[3])
         # if it takes more than 5s to find the next acceptable value, assume you're done
         if time.time() - last_found > 5:
@@ -112,7 +112,7 @@ print('PART ONE')
 
 ans = run(True)
 
-print(ans)
+print('{}   '.format(ans))
 if testing:
     if part_one == ans:
         print('PART ONE CORRECT')
@@ -124,7 +124,7 @@ print('PART TWO')
 
 ans = run(False)
 
-print(ans)
+print('{}   '.format(ans))
 if testing:
     if part_two == ans:
         print('PART TWO CORRECT')
