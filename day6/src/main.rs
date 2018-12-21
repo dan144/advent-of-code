@@ -1,5 +1,4 @@
 use regex::Regex;
-use std::panic;
 
 type Coord = (usize, usize);
 
@@ -29,7 +28,7 @@ fn run(grid : &mut Array2<usize>, action : &Action) {
     };
     let range = (rect.tl.0..=rect.br.0).cartesian_product(rect.tl.1..=rect.br.1);
     for loc in range {
-        let mut spot = grid.get_mut(loc).unwrap();
+        let spot = grid.get_mut(loc).unwrap();
         match action {
             Action::TurnOn(_) => *spot = 1,
             Action::TurnOff(_) => *spot = 0,
@@ -48,7 +47,7 @@ fn run2(grid : &mut Array2<isize>, action : &Action) {
     };
     let range = (rect.tl.0..=rect.br.0).cartesian_product(rect.tl.1..=rect.br.1);
     for loc in range {
-        let mut spot = grid.get_mut(loc).unwrap();
+        let spot = grid.get_mut(loc).unwrap();
         match action {
             Action::TurnOn(_) => *spot += 1,
             Action::TurnOff(_) => *spot -= 1,
