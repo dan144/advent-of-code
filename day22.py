@@ -33,8 +33,29 @@ print()
 print('PART ONE')
 ans = None
 
+depth = int(inputs[0].split()[1])
+tx, ty = list(map(int, inputs[1].split()[1].split(',')))
 
+cave = []
+risk_level = 0
+for y in range(ty+1):
+    cave.append([])
+    for x in range(tx+1):
+        if x == 0 and y == 0:
+            geologic = 0
+        elif x == tx and y == ty:
+            geologic = 0
+        elif y == 0:
+            geologic = x * 16807
+        elif x == 0:
+            geologic = y * 48271
+        else:
+            geologic = cave[y][x-1] * cave[y-1][x]
+        erosion = (geologic + depth) % 20183
+        cave[y].append(erosion)
+        risk_level += (erosion % 3)
 
+ans = risk_level
 print(ans)
 if testing:
     if part_one == ans:
