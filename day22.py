@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/python3 -u
 
 import json
 import sys
@@ -7,7 +7,7 @@ from copy import copy
 
 print('Running:',sys.argv[0])
 
-testing = len(sys.argv) == 2
+testing = len(sys.argv) == 2 and sys.argv[1] == '-t'
 
 n = sys.argv[0][2:].index('.')
 filen = sys.argv[0][5:n+1+len(str(n))]
@@ -33,10 +33,10 @@ if testing:
 
 depth = int(inputs[0].split()[1])
 tx, ty = list(map(int, inputs[1].split()[1].split(',')))
-xm = 2
-print('(For part 2, running with max x value at {}x target x value)'.format(xm))
+xm = int(sys.argv[1]) if len(sys.argv) == 2 and sys.argv[1] != '-t' else 2
+print("(For part 2, running with max x value at {}x target's x value, which is {})".format(xm, tx))
 maxx = int(tx * xm)  # determine a better way to detect the max
-maxy = int(ty * 2)
+maxy = int(ty * 1)
 
 print()
 print('PART ONE')
@@ -95,7 +95,7 @@ def move(spots):
     for spot in spots:
         if minm is not None and spot[3] >= minm:
             continue
-        x, y, equipped, ocost, seen = spot
+        x, y, equipped, ocost, seen, changes = spot
         # this check should never be necessary
         #if x == tx and y == ty:
         #    cost = 0 if equipped == TORCH else 7
@@ -115,13 +115,20 @@ def move(spots):
             for rtype, nequip in next_set:
                 if cave[y][x] == rtype:  # the current region doesn't allow this equipment
                     continue
-                cost = 1 if equipped == nequip else 8
-                if minm is None or ocost + cost < minm:
-                    if mcosts[nequip][y+dy][x+dx] is None or ocost + cost < mcosts[nequip][y+dy][x+dx]:
-                        mcosts[nequip][y+dy][x+dx] = ocost + cost
-                        nseen = copy(seen)
-                        nseen.add((x+dx, y+dy))
-                        n.append((x+dx, y+dy, nequip, ocost + cost, nseen))
+                if equipped == nequip:
+                    cost = 1
+                    changed = 0
+                else:
+                    cost = 8
+                    changed = 1
+                if minm is not None and ocost + cost >= minm:
+                    continue
+                if mcosts[nequip][y+dy][x+dx] is not None and ocost + cost >= mcosts[nequip][y+dy][x+dx]:
+                    continue
+                mcosts[nequip][y+dy][x+dx] = ocost + cost
+                nseen = copy(seen)
+                nseen.append((x+dx, y+dy))
+                n.append((x+dx, y+dy, nequip, ocost + cost, nseen, changes + changed))
     return n
 
 
@@ -143,16 +150,26 @@ TORCH = 0
 CLIMBING = 1
 NEITHER = 2
 
-# x, y, equipped, cost, history
-spots = [(0, 0, TORCH, 0, {(0,0)})]
+# x, y, equipped, cost, history, changes
+spots = [(0, 0, TORCH, 0, [(0,0)], 0)]
 left = []
+spath = None
+fchange = None
 print('     Left  Minimum')
 while spots or left:
     for spot in spots:
         if spot[0] == tx and spot[1] == ty:
-            cost = spot[3] + (0 if spot[2] == TORCH else 7)
+            cost = spot[3]
+            if spot[2] == TORCH:
+                cost += 0
+                changed = 0
+            else:
+                cost += 7
+                changed = 1
             if minm is None or cost < minm:
                 minm = cost
+                spath = spot[4]
+                fchange = spot[5] + changed
         else:
             if minm is None or spot[3] < minm:
                 left.append(spot)
@@ -164,9 +181,29 @@ while spots or left:
     spots = move(spots)
     print(' {:8d} {:>8s}\r'.format(len(spots) + len(left), str(minm) if minm is not None else '?'), end='')
 
-print()
 ans = minm
-print(ans)
+print()
+print(spath)
+print()
+walked = []
+m = []
+for wy in range(len(cave)):
+    m.append([])
+    for wx in range(len(cave[0])):
+        if cave[wy][wx] % 3 == ROCKY:
+            m[-1].append('.')
+        elif cave[wy][wx] % 3 == WET:
+            m[-1].append('=')
+        else:
+            m[-1].append('|')
+    walked.append(copy(m[wy]))
+for lx, ly in spath:
+    walked[ly][lx] = 'X'
+print('Moving time:', len(spath) - 1)
+print('Switching time ({} switches):'.format(fchange), fchange*7)
+print('Total time:', ans)
+for i in range(len(m)):
+    print(''.join(m[i]), ''.join(walked[i]))
 if testing:
     if part_two == ans:
         print('PART TWO CORRECT')
