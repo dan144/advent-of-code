@@ -33,7 +33,28 @@ print()
 print('PART ONE')
 ans = None
 
+drones = []
+maxr = 0
+for line in inputs:
+    p = line.split(', ')
+    x, y, z = list(map(int, p[0].split('<')[1][:-1].split(',')))
+    r = int(p[1].split('=')[1])
+    drones.append((x, y, z, r))
+    if r > drones[maxr][3]:
+        maxr = len(drones) - 1
 
+max_radius = drones[maxr][3]
+
+def man_dist(drone_a, drone_b):
+    d = 0
+    for i in range(3):
+        d += abs(drone_a[i] - drone_b[i])
+    return d
+
+ans = 0
+for drone in drones:
+    if man_dist(drone, drones[maxr]) <= drones[maxr][3]:
+        ans += 1
 
 print(ans)
 if testing:
