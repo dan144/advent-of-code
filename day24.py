@@ -6,6 +6,7 @@ import sys
 print('Running:',sys.argv[0])
 
 testing = len(sys.argv) == 2
+testing2 = len(sys.argv) == 2 and sys.argv[1] == '-t2'
 
 n = sys.argv[0][2:].index('.')
 filen = sys.argv[0][5:n+1+len(str(n))]
@@ -33,14 +34,23 @@ print()
 print('PART ONE')
 ans = None
 
+UNITS = 0
+HP = 1
+XDAM = 2
+DTYPE = 3
+INIT = 4
+WEAK_TO = 5
+IM_TO = 6
+EFFP = 0
+INIT2 = 1
+INDEX = 2
+TARGET = 3
+
 boost = 0
 won = False
 while not won:
-    #Immune System:
-    #Infection:
-    #5294 units each with 7781 hit points (weak to slashing; immune to fire) with an attack that does 12 slashing damage at initiative 5
-    #807 units each with 4206 hit points (weak to slashing, bludgeoning) with an attack that does 44 fire damage at initiative 7
-    
+    # parse input
+
     # units, hp, x damage, damage type, initiative, weak to, immune to
     immunes = []
     infects = []
@@ -103,26 +113,8 @@ while not won:
         else:
             infects.append(to_add)
     
-    # units, hp, x damage, damage type, initiative, weak to, immune to
-    UNITS = 0
-    HP = 1
-    XDAM = 2
-    DTYPE = 3
-    INIT = 4
-    WEAK_TO = 5
-    IM_TO = 6
-    #immunes = sorted(immunes, key=lambda x: x[4], reverse=True)
-    #infects = sorted(infects, key=lambda x: x[4], reverse=True)
-    
-    EFFP = 0
-    INIT2 = 1
-    INDEX = 2
-    TARGET = 3
     locked = False
     while immunes and infects and not locked:
-        #print(immunes)
-        #print(infects)
-
         # target selection
         im_o = []
         in_o = []
@@ -134,8 +126,6 @@ while not won:
         im_o = sorted(im_o, reverse=True)
         in_o = sorted(in_o, reverse=True)
     
-        #print('Immune:', im_o)
-        #print('Infect:', in_o)
         selected = set()
         for in_i in range(len(in_o)):
             in_x = in_i
@@ -151,7 +141,7 @@ while not won:
                     damage *= 2
                 elif infects[in_i][DTYPE] in immunes[target][IM_TO]:
                     damage = 0
-                if testing:
+                if testing2:
                     print('Infection group {} would deal defending group {} {} damage'.format(in_i+1, target+1, damage))
                 if damage > dam and target not in selected:
                     dam = damage
@@ -175,7 +165,7 @@ while not won:
                     damage *= 2
                 elif immunes[im_i][DTYPE] in infects[target][IM_TO]:
                     damage = 0
-                if testing:
+                if testing2:
                     print('Immune System group {} would deal defending group {} {} damage'.format(im_i+1, target+1, damage))
                 if damage > dam and target not in selected:
                     dam = damage
@@ -187,8 +177,6 @@ while not won:
         # attack in order of initiative
         im_o = sorted(im_o, key=lambda x: x[INIT2], reverse=True)
         in_o = sorted(in_o, key=lambda x: x[INIT2], reverse=True)
-        #print('Immunes:', im_o)
-        #print('Infects:', in_o)
     
         # attack
         in_i = 0
@@ -208,7 +196,7 @@ while not won:
                     killed = int(damage / immunes[target][HP])
                     tk += killed
                     immunes[target][UNITS] -= killed
-                    if testing:
+                    if testing2:
                         print('Infection group {} attacks defending group {}, killing {} units'.format(in_i+1, target+1, killed))
                 in_i = in_x + 1
             elif im_i < len(immunes):
@@ -224,7 +212,7 @@ while not won:
                     killed = int(damage / infects[target][HP])
                     tk += killed
                     infects[target][UNITS] -= killed
-                    if testing:
+                    if testing2:
                         print('Immune System group {} attacks defending group {}, killing {} units'.format(im_i+1, target+1, killed))
                 im_i = im_x + 1
         if tk == 0:
@@ -241,14 +229,26 @@ while not won:
         infects = n_in
         immunes = n_im
 
+    if boost == 0:
+        ans = sum([x[0] for x in infects])
+        print(ans)
+        if testing:
+            if part_one == ans:
+                print('PART ONE CORRECT')
+            else:
+                print('PART ONE FAILED')
+        print()
+        print('PART TWO')
+
     if locked:
-        print('Deadlocked with boost', boost)
+        print(' Locked with boost {}\r'.format(boost), end='')
         boost += 1
         continue
 
     if immunes:
         won = True
         ans = sum([x[0] for x in immunes])
+        print()
         print(ans)
         if testing:
             if part_two == ans:
@@ -256,16 +256,5 @@ while not won:
             else:
                 print('PART TWO FAILED')
     else:
-        if boost == 0:
-            ans = sum([x[0] for x in infects])
-            print(ans)
-            if testing:
-                if part_one == ans:
-                    print('PART ONE CORRECT')
-                else:
-                    print('PART ONE FAILED')
-            print()
-            print('PART TWO')
-
-        print('Failed with boost', boost)
+        print(' Failed with boost {}\r'.format(boost), end='')
         boost += 1
