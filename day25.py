@@ -23,7 +23,6 @@ with open(input_file, 'r') as f:
     if testing:
         test_vals = json.loads(f.readline())
         part_one = test_vals['part_one']
-        part_two = test_vals['part_two']
     for line in f:
         inputs.append(data_type(line[:-1]))
 if testing:
@@ -33,25 +32,45 @@ print()
 print('PART ONE')
 ans = None
 
+#2,5,-4,-7
+consts = []
+for line in inputs:
+    consts.append([tuple(map(int, line.split(',')))])
 
+def man_dist(a, b):
+    d = 0
+    for i in range(4):
+        d += abs(a[i]-b[i])
+    return d
 
+new = True
+while new:
+    new = False
+    n = []
+    removed = set()
+    for i in range(len(consts) - 1):
+        if i in removed:
+            continue
+        for j in range(i+1, len(consts)):
+            if j in removed:
+                continue
+            for a in consts[i]:
+                for b in consts[j]:
+                    if man_dist(a, b) <= 3:
+                        consts[i].extend(consts[j])
+                        new = True
+                        removed.add(j)
+                        break
+                else:
+                    continue
+                break
+    for r in sorted(removed, reverse=True):
+        consts.pop(r)
+
+ans = len(consts)
 print(ans)
 if testing:
     if part_one == ans:
         print('PART ONE CORRECT')
     else:
         print('PART ONE FAILED')
-
-
-print()
-print('PART TWO')
-ans = None
-
-
-
-print(ans)
-if testing:
-    if part_two == ans:
-        print('PART TWO CORRECT')
-    else:
-        print('PART TWO FAILED')
