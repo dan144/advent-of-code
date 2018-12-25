@@ -33,29 +33,14 @@ if testing:
 
 depth = int(inputs[0].split()[1])
 tx, ty = list(map(int, inputs[1].split()[1].split(',')))
-xm = int(sys.argv[1]) if len(sys.argv) == 2 and sys.argv[1] != '-t' else 2
-print("(For part 2, running with max x value at {}x target's x value, which is {})".format(xm, tx))
-maxx = int(tx * xm)  # determine a better way to detect the max
+maxx = int(tx * 5)  # determine a better way to detect the max
 maxy = int(ty * 1)
 
 print()
 print('PART ONE')
 ans = None
 
-# Times for various region multipliers
-# 200,3 -> 1m37s
-# 100,2 -> 1m27s
-# 50,2  -> 0m33s
-# 10,2  -> 0m09s
-# 10,1  -> 0m09s
-# 5,1   -> 0m08s
-
 minm = None
-# FAILS
-# 1076 - too high
-# 1069 - too low
-# 1075 - right answer
-
 cave = []
 risk_level = 0
 for y in range(maxy+1):
@@ -96,11 +81,7 @@ def move(spots):
         if minm is not None and spot[3] >= minm:
             continue
         x, y, equipped, ocost, seen, changes = spot
-        # this check should never be necessary
-        #if x == tx and y == ty:
-        #    cost = 0 if equipped == TORCH else 7
-        #    n.append((x, y, TORCH, ocost + cost, None))
-        #    continue
+
         for dx, dy in {(-1, 0), (0, -1), (0, 1), (1, 0)}:
             if x + dx < 0 or y + dy < 0 or x + dx > maxx or y + dy > maxy or (x + dx, y + dy) in seen:
                 continue
@@ -113,7 +94,7 @@ def move(spots):
                 next_set = {(ROCKY, NEITHER), (WET, TORCH)}
 
             for rtype, nequip in next_set:
-                if cave[y][x] == rtype:  # the current region doesn't allow this equipment
+                if cave[y][x] % 3 == rtype:  # the current region doesn't allow this equipment
                     continue
                 if equipped == nequip:
                     cost = 1
@@ -183,27 +164,7 @@ while spots or left:
 
 ans = minm
 print()
-print(spath)
-print()
-walked = []
-m = []
-for wy in range(len(cave)):
-    m.append([])
-    for wx in range(len(cave[0])):
-        if cave[wy][wx] % 3 == ROCKY:
-            m[-1].append('.')
-        elif cave[wy][wx] % 3 == WET:
-            m[-1].append('=')
-        else:
-            m[-1].append('|')
-    walked.append(copy(m[wy]))
-for lx, ly in spath:
-    walked[ly][lx] = 'X'
-print('Moving time:', len(spath) - 1)
-print('Switching time ({} switches):'.format(fchange), fchange*7)
-print('Total time:', ans)
-for i in range(len(m)):
-    print(''.join(m[i]), ''.join(walked[i]))
+print(ans)
 if testing:
     if part_two == ans:
         print('PART TWO CORRECT')
