@@ -14,16 +14,21 @@ func main() {
 	}
 	defer file.Close()
 
-	total := 0
-	value := 0
+	total := 0 // literal chars given
+	value := 0 // compact value
+	valuex := 0 // expanded value
 	ignore := 0
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		s := scanner.Text()
 		total += len(s)
 		value += len(s)
+		valuex += len(s) + 2
 		ignore = 0
 		for pos, chr := range s {
+			if chr == '"' || chr == '\\' {
+				valuex += 1
+			}
 			if ignore > 0 {
 				ignore -= 1
 				continue
@@ -47,7 +52,6 @@ func main() {
 	if err := scanner.Err(); err != nil {
 		log.Fatal(err)
 	}
-	fmt.Printf("Total: %d\n", total)
-	fmt.Printf("Value: %d\n", value)
-	fmt.Printf("Answer: %d\n", total-value)
+	fmt.Printf("Part 1: %d\n", total-value)
+	fmt.Printf("Part 2: %d\n", valuex-total)
 }
