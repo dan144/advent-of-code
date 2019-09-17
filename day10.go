@@ -22,7 +22,7 @@ func main() {
         fmt.Printf("Input: %s\n", s)
     }
 
-    for i := 0; i < 40; i++ {
+    for i := 0; i < 50; i++ {
         in_ord := 0
         new_s := ""
         c := ""
@@ -38,10 +38,15 @@ func main() {
             }
 		}
         s = new_s + strconv.Itoa(in_ord) + c
+	    fmt.Printf("After %d: %d\n", i + 1, len(s))
+        if i == 39 {
+	        fmt.Printf("Part 1: %d\n", len(s))
+        }
+
 	}
 
 	if err := scanner.Err(); err != nil {
 		log.Fatal(err)
 	}
-	fmt.Printf("Part 1: %d\n", len(s))
+	fmt.Printf("Part 2: %d\n", len(s))
 }
