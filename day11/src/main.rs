@@ -68,5 +68,11 @@ fn main() -> std::io::Result<()> {
     }
     println!("Part 1: {:?}", password);
 
+    password = get_next(&mut password);
+    while !valid_password(&password) {
+        password = get_next(&mut password);
+    }
+    println!("Part 2: {:?}", password);
+
     Ok(())
 }
