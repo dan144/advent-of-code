@@ -1,0 +1,9 @@
+[package]
+name = "day13"
+version = "0.1.0"
+authors = ["Daniel Gross <dan.12sq@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+permutohedron = "0.2.4"
+regex = "1.3.1"
