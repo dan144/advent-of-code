@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
-    "strconv"
+	"strconv"
 )
 
 func main() {
@@ -19,29 +19,29 @@ func main() {
 	s := ""
 	for scanner.Scan() {
 		s = scanner.Text()
-        fmt.Printf("Input: %s\n", s)
-    }
+		fmt.Printf("Input: %s\n", s)
+	}
 
-    for i := 0; i < 50; i++ {
-        in_ord := 0
-        new_s := ""
-        c := ""
+	for i := 0; i < 50; i++ {
+		in_ord := 0
+		new_s := ""
+		c := ""
 		for pos, chr := range s {
-            in_ord += 1
-            if pos + 1 == len(s) {
-                c = string(chr)
-                break
-            }
-            if s[pos] != s[pos + 1] {
-                new_s += strconv.Itoa(in_ord) + string(chr)
-                in_ord = 0
-            }
+			in_ord += 1
+			if pos+1 == len(s) {
+				c = string(chr)
+				break
+			}
+			if s[pos] != s[pos+1] {
+				new_s += strconv.Itoa(in_ord) + string(chr)
+				in_ord = 0
+			}
 		}
-        s = new_s + strconv.Itoa(in_ord) + c
-	    fmt.Printf("After %d: %d\n", i + 1, len(s))
-        if i == 39 {
-	        fmt.Printf("Part 1: %d\n", len(s))
-        }
+		s = new_s + strconv.Itoa(in_ord) + c
+		fmt.Printf("After %d: %d\n", i+1, len(s))
+		if i == 39 {
+			fmt.Printf("Part 1: %d\n", len(s))
+		}
 
 	}
 

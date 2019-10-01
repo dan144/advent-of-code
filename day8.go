@@ -14,8 +14,8 @@ func main() {
 	}
 	defer file.Close()
 
-	total := 0 // literal chars given
-	value := 0 // compact value
+	total := 0  // literal chars given
+	value := 0  // compact value
 	valuex := 0 // expanded value
 	ignore := 0
 	scanner := bufio.NewScanner(file)

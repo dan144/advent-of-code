@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"log"
 	"os"
-    "regexp"
-    "strconv"
+	"regexp"
+	"strconv"
 )
 
 func main() {
@@ -20,20 +20,20 @@ func main() {
 	s := ""
 	for scanner.Scan() {
 		s = scanner.Text()
-        fmt.Printf("Input: %d chars\n", len(s))
-    }
+		fmt.Printf("Input: %d chars\n", len(s))
+	}
 
-    re := regexp.MustCompile(`-?\d+`)
-    nums := re.FindAllString(s, -1)
-    total := 0
+	re := regexp.MustCompile(`-?\d+`)
+	nums := re.FindAllString(s, -1)
+	total := 0
 
-    for _, i := range nums {
-        j, err := strconv.Atoi(i)
-        if err != nil {
-            panic(err)
-        }
-        total += j
-    }
+	for _, i := range nums {
+		j, err := strconv.Atoi(i)
+		if err != nil {
+			panic(err)
+		}
+		total += j
+	}
 
 	if err := scanner.Err(); err != nil {
 		log.Fatal(err)
