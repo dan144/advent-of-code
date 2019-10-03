@@ -9,18 +9,27 @@ with open('input/16', 'r') as f:
         d = {x.split(': ')[0]: int(x.split(': ')[1]) for x in groups}
         sues.append(d)
 
-exp = {
+exact = {
     'children': 3,
-    'cats': 7,
     'samoyeds': 2,
-    'pomeranians': 3,
     'akitas': 0,
     'vizslas': 0,
-    'goldfish': 5,
-    'trees': 3,
     'cars': 2,
     'perfumes': 1
 }
+greater = {
+    'cats': 7,
+    'trees': 3
+}
+fewer = {
+    'pomeranians': 3,
+    'goldfish': 5
+}
+
+exp = {}
+exp.update(exact)
+exp.update(greater)
+exp.update(fewer)
 
 for sue in sues:
     for k, v in exp.items():
@@ -28,4 +37,17 @@ for sue in sues:
             break
     else:
         print(f'Part 1: {sues.index(sue) + 1}')
+        break
+
+for sue in sues:
+    for k, v in exp.items():
+        if sue.get(k) is not None:
+            if k in exact and sue.get(k) != v:
+                break
+            elif k in fewer and sue.get(k) >= v:
+                break
+            elif k in greater and sue.get(k) <= v:
+                break
+    else:
+        print(f'Part 2: {sues.index(sue) + 1}')
         break
