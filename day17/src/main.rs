@@ -21,7 +21,9 @@ fn main() -> std::io::Result<()> {
 
     let eggnog = 150;  // input
     let mut works = 0;
-    for l in 0..buckets.len() {
+    let mut min_w = 0;
+    let mut m_works = 0;
+    for l in 1..buckets.len() {
         let it = buckets.iter().combinations(l);
         for p in it {
             let mut total = eggnog;
@@ -30,12 +32,16 @@ fn main() -> std::io::Result<()> {
             }
             if total == 0 {
                 works += 1;
+                if min_w == 0 || min_w == l {
+                    min_w = l;
+                    m_works += 1;
+                }
             }
         }
     }
 
     println!("Part 1: {:?}", works);
-    // println!("Part 2: {:?}", reduce(map.clone()));
+    println!("Part 2: {:?}", m_works);
 
     Ok(())
 }
