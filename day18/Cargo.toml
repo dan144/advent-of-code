@@ -1,0 +1,9 @@
+[package]
+name = "day6"
+version = "0.1.0"
+authors = ["Daniel Gross <dan.12sq@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+itertools = "0.8.0"
+ndarray = "0.12.1"
