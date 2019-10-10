@@ -3,7 +3,7 @@ use ndarray::Array2;
 
 const SIZE : usize = 100;
 
-fn run(grid : &mut Array2<usize>) -> Array2<usize> {
+fn run(grid : &mut Array2<usize>, stuck : u32) -> Array2<usize> {
     use itertools::Itertools;
     use std::cmp;
 
@@ -28,7 +28,9 @@ fn run(grid : &mut Array2<usize>) -> Array2<usize> {
             }
 
             let spot = new_grid.get_mut((x as usize, y as usize)).unwrap();
-            if is_on == 1 && (sum == 2 || sum == 3) {
+            if stuck == 1 && (x == 0 || x == SIZE as i32 - 1) && (y == 0 || y == SIZE as i32 - 1) {
+                *spot = 1;
+            } else if is_on == 1 && (sum == 2 || sum == 3) {
                 *spot = 1;
             } else if is_on == 0 && sum == 3 {
                 *spot = 1;
@@ -58,12 +60,18 @@ fn main() -> std::io::Result<()> {
             };
         }
     }
+    let o_grid = grid.clone();
 
-    println!("Part 1: {}", grid.sum());
     for _c in 0..100 {
-        grid = run(&mut grid);
+        grid = run(&mut grid, 0);
     }
     println!("Part 1: {}", grid.sum());
+
+    grid = o_grid;
+    for _c in 0..100 {
+        grid = run(&mut grid, 1);
+    }
+    println!("Part 2: {}", grid.sum());
 
     Ok(())
 }
