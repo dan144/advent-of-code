@@ -1,0 +1,8 @@
+[package]
+name = "day20"
+version = "0.1.0"
+authors = ["Daniel Gross <dan.12sq@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+factor = "0.4.0"
