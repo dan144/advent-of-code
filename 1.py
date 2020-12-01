@@ -2,14 +2,14 @@
 
 import sys
 
-test = len(sys.argv) > 1 and sys.argv[1] == '-t'
-in_file = '1.test' if test else '1'
+test = len(sys.argv) > 1
+input_file = 'input' + sys.argv[0].split('.')[1].lstrip('/') + ('.test' if test else '')
 
 p1 = 0
 p2 = 0
 
 inp = []
-with open(in_file, 'r') as f:
+with open(input_file, 'r') as f:
     for line in f:
         inp.append(int(line))
 
