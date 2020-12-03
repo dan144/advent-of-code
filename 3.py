@@ -17,6 +17,8 @@ with open(input_file, 'r') as f:
             inp[(y, x)] = line[x]
         y += 1
 
+width = len(line) - 1
+
 def check_slope(dx, dy):
     c = 0
     x = 0
@@ -24,7 +26,7 @@ def check_slope(dx, dy):
     while y < len(inp):
         y += dy
         x += dx
-        if inp.get((y, x % (len(line)-1))) == '#':
+        if inp.get((y, x % width)) == '#':
             c += 1
     return c
 
