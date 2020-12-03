@@ -17,27 +17,22 @@ with open(input_file, 'r') as f:
             inp[(y, x)] = line[x]
         y += 1
 
-dy = 1
-dx = 3
-y = 0
-x = 0
-while y < len(inp):
-    y += dy
-    x += dx
-    if inp.get((y, x % (len(line)-1))) == '#':
-        p1 += 1
-
-print(f'Part 1: {p1}')
-
-
-for dx, dy in ((1, 1), (3, 1), (5, 1), (7, 1), (1, 2)):
-    y = 0
-    x = 0
+def check_slope(dx, dy):
     c = 0
+    x = 0
+    y = 0
     while y < len(inp):
         y += dy
         x += dx
         if inp.get((y, x % (len(line)-1))) == '#':
             c += 1
-    p2 *= c
+    return c
+
+
+p1 = check_slope(3, 1)
+print(f'Part 1: {p1}')
+
+
+for slope in ((1, 1), (3, 1), (5, 1), (7, 1), (1, 2)):
+    p2 *= check_slope(*slope)
 print(f'Part 2: {p2}')
