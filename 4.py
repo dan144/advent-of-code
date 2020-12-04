@@ -26,8 +26,9 @@ passports.append(passport)
 req = {'ecl', 'pid', 'eyr', 'hcl', 'byr', 'iyr', 'hgt'}
 
 for passport in passports:
-    if len(passport.keys()) == 8 or set(passport.keys()) == req:
+    if req.issubset(set(passport.keys())):
         p1 += 1
+
         valid = True
         for k, v in passport.items():
             if k == 'byr' and int(v) not in range(1920, 2002+1):
@@ -55,11 +56,7 @@ for passport in passports:
             if k == 'ecl' and v not in {'amb', 'blu', 'brn', 'gry', 'grn', 'hzl', 'oth'}:
                 valid = False
             if k == 'pid':
-                try:
-                    l = len(re.findall(r'[0-9]+', v)[0])
-                    if l != 9:
-                        valid = False
-                except:
+                if len(re.findall(r'[0-9]+', v)[0]) != 9:
                     valid = False
         if valid:
             p2 += 1
