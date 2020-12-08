@@ -1,5 +1,14 @@
 from copy import deepcopy
 
+def parse(input_file):
+    cmds = []
+    with open(input_file) as f:
+        for line in f:
+            ins, off = line.split()
+            cmds.append([ins, int(off), False])
+
+    return cmds
+
 def run(cmd, term=True):
     cmd = deepcopy(cmd)
     acc = 0
