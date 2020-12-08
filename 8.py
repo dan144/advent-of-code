@@ -13,14 +13,17 @@ p2 = 0
 inp = []
 with open(input_file) as f:
     for line in f:
-        inp.append([line.split()[0], int(line.split()[1]), False])
+        ins, off = line.split()
+        inp.append([ins, int(off), False])
 
-def run(cmd):
+def run(cmd, term=True):
+    cmd = deepcopy(cmd)
     acc = 0
     ip = 0
+    quit = False
     try:
         while True:
-            if cmd[ip][2]:
+            if term and cmd[ip][2]:
                 break
             ins = cmd[ip]
             ins[2] = True
@@ -31,11 +34,11 @@ def run(cmd):
                 ip += 1
             elif ins[0] == 'jmp':
                 ip += ins[1]
-    except:
-        return acc, True
-    return acc, False
+    except IndexError:
+        quit = True
+    return acc, quit
 
-p1, _ = run(deepcopy(inp))
+p1, _ = run(inp)
 print(f'Part 1: {p1}')
 
 for i in range(len(inp)):
