@@ -2,8 +2,6 @@
 
 import sys
 
-from copy import copy
-
 test = len(sys.argv) > 1
 input_file = 'input' + sys.argv[0].split('.')[1].lstrip('/') + ('.test' if test else '')
 
@@ -16,7 +14,7 @@ with open(input_file) as f:
         inp.append(int(line))
 
 n_preamble = 5 if test else 25
-preamble = copy(inp[:n_preamble])
+preamble = inp[:n_preamble]
 
 for n in inp[n_preamble:]:
     valid = False
@@ -27,15 +25,12 @@ for n in inp[n_preamble:]:
             if preamble[a] + preamble[b] == n:
                 valid = True
                 break
-        else:
-            continue
-        # break
     else:
         preamble.pop(0)
         preamble.append(n)
     if not valid:
         p1 = n
-        # break
+        break
 print(f'Part 1: {p1}')
 
 for start in range(len(inp)):
