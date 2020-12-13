@@ -10,26 +10,19 @@ first = None
 with open(input_file) as f:
     first = int(f.readline())
     for b in f.readline().rstrip('\n').split(','):
-        try:
-            b = int(b)
-        except:
-            pass
-        buses.append(b)
+        buses.append(b if b == 'x' else int(b))
 
-low = (10000, 0)
-inc = None
-m = 1
+low = (float('inf'), 0)
 for bus in buses:
-    try:
-        b = int(bus)
-        t = b
-        while t < first:
-            t += b
-        diff = t - first
-        if diff < low[0]:
-            low = (diff, b)
-    except:
-        pass
+    if bus == 'x':
+        continue
+
+    t = bus
+    while t < first:
+        t += bus
+    diff = t - first
+    if diff < low[0]:
+        low = (diff, bus)
 
 p1 = low[0] * low[1]
 print(f'Part 1: {p1}')
