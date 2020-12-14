@@ -24,8 +24,7 @@ direc = 1
 x, y = 0, 0
 for act, dist in inp:
     if act in 'LR':
-        direc = (direc + moves[act] * dist // 90) % 4
-        act = dirs[direc]
+        act = dirs[(direc + moves[act] * dist // 90) % 4]
     else:
         if act == 'F':
             act = dirs[direc]
@@ -41,15 +40,8 @@ x, y = 0, 0
 wx, wy = 10, 1
 for act, dist in inp:
     if act in 'LR':
-        for t in range(dist // 90):
-            if act == 'R':
-                s = wy
-                wy = -1 * wx
-                wx = s
-            else:
-                s = wx
-                wx = -1 * wy
-                wy = s
+        for _ in range(dist // 90):
+            wx, wy = (wy, -1 * wx) if act == 'R' else (-1 * wy, wx)
     elif act == 'F':
         x += dist * wx
         y += dist * wy
