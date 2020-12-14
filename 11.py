@@ -32,8 +32,8 @@ def run(og_seats, occ_adj, find_first):
                     found = False
                     ny, nx = y, x
                     while not found:
-                        ny = ny + dy
-                        nx = nx + dx
+                        ny += dy
+                        nx += dx
                         if (ny, nx) not in seats.keys():
                             found = True # off board
                             continue
@@ -41,10 +41,7 @@ def run(og_seats, occ_adj, find_first):
                             found = True
 
                         if seats[ny, nx] == OCCPD:
-                            if seats[y, x] == EMPTY:
-                                adj += 1
-                            if seats[y, x] == OCCPD:
-                                adj += 1
+                            adj += 1
     
             if seats[y, x] == EMPTY and adj == 0:
                 ns[y, x] = OCCPD
