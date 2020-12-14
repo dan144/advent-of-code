@@ -13,8 +13,8 @@ seats = {}
 y = 0
 with open(input_file) as f:
     for line in f:
-        for x in range(len(line[:-1])):
-            seats[y, x] = line[x]
+        for x, c in enumerate(line[:-1]):
+            seats[y, x] = c
         y += 1
 
 def run(og_seats, occ_adj, find_first):

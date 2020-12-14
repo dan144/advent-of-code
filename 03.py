@@ -13,8 +13,8 @@ inp = {}
 with open(input_file, 'r') as f:
     y = 0
     for line in f:
-        for x in range(len(line)):
-            inp[(y, x)] = line[x]
+        for x, c in enumerate(line):
+            inp[(y, x)] = c
         y += 1
 
 width = len(line) - 1

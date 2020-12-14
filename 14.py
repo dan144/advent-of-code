@@ -44,7 +44,7 @@ with open(input_file) as f:
             i_addr, val = map(int, re.findall(r'[0-9]+', line))
             l_addr = list(f'{i_addr:036b}')
             # overwrite with X and 1 from mask, pass through from address on 0
-            addr = ''.join((mask[b] if mask[b] in 'X1' else l_addr[b] for b in range(len(mask))))
+            addr = ''.join((m_bit if m_bit in 'X1' else a_bit for a_bit, m_bit in zip(l_addr, mask)))
             fill(addr, val)
 
 p2 = sum(mem.values())

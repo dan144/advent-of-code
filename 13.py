@@ -9,7 +9,7 @@ earliest = None
 with open(input_file) as f:
     earliest = int(f.readline())
     inp = f.readline().rstrip('\n').split(',')
-    buses = {i: int(inp[i]) for i in range(len(inp)) if inp[i] != 'x'}
+    buses = {i: int(b) for i, b in enumerate(inp) if b != 'x'}
 
 low = (float('inf'), 0)
 for bus in buses.values():
