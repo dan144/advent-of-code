@@ -15,6 +15,7 @@ def fill(addr, val):
         addr = int(addr, 2)
         if addr not in mem:
             mem[addr] = 0
+        # Part 1: zeros from mask forced by `and mask`, ones from mask forced by `or mask`
         mem[addr] = (omask & val) | zmask
 
 mem = {}
@@ -22,8 +23,8 @@ with open(input_file) as f:
     for line in f:
         if line.startswith('mask = '):
             mask = line.split(' = ')[1].rstrip('\n')
-            zmask = int(mask.replace('X', '0'), 2) # do not replace on bitwise or
-            omask = int(mask.replace('X', '1'), 2) # force replacement on bitwise and
+            zmask = int(mask.replace('X', '0'), 2) # ensure not X->1 on bitwise or
+            omask = int(mask.replace('X', '1'), 2) # ensure not X->0 on bitwise and
         else:
             addr, val = map(int, re.findall(r'[0-9]+', line))
             fill(f'{addr:036b}', val)
@@ -31,7 +32,7 @@ with open(input_file) as f:
 p1 = sum(mem.values())
 print(f'Part 1: {p1}')
 
-# all ones and zeros to make it a pass through in fill()
+# all ones and zeros to make these a pass through in fill()
 omask = 2 ** 36 - 1
 zmask = 0
 mem = {}
@@ -42,7 +43,7 @@ with open(input_file) as f:
         else:
             i_addr, val = map(int, re.findall(r'[0-9]+', line))
             l_addr = list(f'{i_addr:036b}')
-            # overwrite X and 1 from mask, pass through from address on 0
+            # overwrite with X and 1 from mask, pass through from address on 0
             addr = ''.join((mask[b] if mask[b] in 'X1' else l_addr[b] for b in range(len(mask))))
             fill(addr, val)
 
