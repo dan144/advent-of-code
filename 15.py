@@ -24,14 +24,15 @@ for i in range(30000000):
             n = 0
         else:
             n = abs(spoken[n][-1] - spoken[n][-2])
+
     if n in spoken:
         spoken[n].append(i)
     else:
         spoken[n] = [i]
-        spoken[n] = spoken[n][:-2]
-    if i == 2020:
-        p1 = n
 
-print(f'Part 1: {p1}')
+    if i == 2019:
+        p1 = n
+        print(f'Part 1: {p1}')
+
 p2 = n
 print(f'Part 2: {p2}')
