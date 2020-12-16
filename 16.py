@@ -9,16 +9,15 @@ input_file = 'input' + sys.argv[0].split('.')[1].lstrip('/') + ('.test' if test 
 p1 = 0
 p2 = 1
 
-inp = []
 fields = []
 my_ticket = None
 all_tickets = []
 with open(input_file) as f:
-    in_fields = True
+    parsing_fields = True
     for line in f:
         if line == '\n':
-            in_fields = False
-        elif in_fields:
+            parsing_fields = False
+        elif parsing_fields:
             field, mn1, mx1, mn2, mx2 = re.search(r'([a-z ]+): ([0-9]+)-([0-9]+) or ([0-9-]+)-([0-9-]+)', line).groups()
             r1 = set(range(int(mn1), int(mx1) + 1))
             r2 = set(range(int(mn2), int(mx2) + 1))
@@ -31,7 +30,7 @@ with open(input_file) as f:
                 else:
                     all_tickets.append(nums)
             except ValueError:
-                pass
+                pass # header lines
 
 all_valid = set()
 for field, v in fields:
@@ -44,14 +43,13 @@ for i, ticket in enumerate(all_tickets):
             p1 += value
             discard.add(i)
 
+print(f'Part 1: {p1}')
+
 for k in sorted(discard, reverse=True):
     all_tickets.pop(k)
 
-valids = []
-for i in range(len(fields)):
-    valids.append([True] * len(my_ticket))
-
 # all ticket must be valid, so any invalid value invalidates that slot from being a field
+valids = [[True] * len(my_ticket) for _ in range(len(fields))]
 for ticket in all_tickets:
     for i, value in enumerate(ticket):
         for j, (_, valid) in enumerate(fields):
@@ -60,6 +58,7 @@ for ticket in all_tickets:
 
 i = 0
 solos = set()
+# reduce until every row only has a single True
 while solos != set(range(len(valids))):
     row = valids[i]
     count = row.count(True)
@@ -78,5 +77,4 @@ for i, row in enumerate(valids):
     if fields[idx][0].startswith('departure'):
         p2 *= my_ticket[i]
 
-print(f'Part 1: {p1}')
 print(f'Part 2: {p2}')
