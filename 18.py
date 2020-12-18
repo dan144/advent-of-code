@@ -17,24 +17,22 @@ def solve(eq, in_order):
                 eq = eq.replace(gp, str(c), 1)
         return eq.lstrip('(').rstrip(')')
     else:
-        t = None
+        ch = eq.lstrip('(').rstrip(')').split()
+        t = int(ch.pop(0))
         op = None
-        for v in eq.lstrip('(').rstrip(')').split():
-            if t is None:
-                t = int(v)
-                continue
+        for v in ch:
             try:
                 v = int(v)
                 t = t + v if op == '+' else t * v
             except:
                 op = v
-        return str(t)
+        return t
 
 def reduct(eq, in_order):
     gps = re.findall(r'\([0-9 *+]+\)', eq)
     for gp in gps:
         v = solve(gp, in_order)
-        eq = eq.replace(gp, v, 1)
+        eq = eq.replace(gp, str(v), 1)
     return eq
 
 ans = [0, 0] 
