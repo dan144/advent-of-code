@@ -3,8 +3,6 @@
 import re
 import sys
 
-from computer import parse, run
-
 test = len(sys.argv) > 1
 input_file = 'input' + sys.argv[0].split('.')[1].lstrip('/') + ('.test' if test else '')
 
@@ -14,7 +12,6 @@ def solve(eq, in_order):
             regex = r'[0-9]+ \+ [0-9]+' if run_op == '+' else r'[0-9]+ \* [0-9]+'
             while re.search(regex, eq):
                 gp = re.search(regex, eq).group(0)
-                # print(gp)
                 a, b = map(int, gp.split(f' {run_op} '))
                 c = a + b if run_op == '+' else a * b
                 eq = eq.replace(gp, str(c), 1)
@@ -44,10 +41,16 @@ ans = [0, 0]
 with open(input_file) as f:
     for line in f:
         eqs = [line[:-1], line[:-1]]
+        if test:
+            print()
+            print(eqs[0])
         for i, eq in enumerate(eqs):
             while '(' in eq:
                 eq = reduct(eq, i)
-            ans[i] += int(solve(eq, i))
+            a = int(solve(eq, i))
+            if test:
+                print(a)
+            ans[i] += a
 
 p1, p2 = ans
 print(f'Part 1: {p1}')
