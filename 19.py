@@ -21,41 +21,41 @@ with open(input_file) as f:
         if to_strs:
             strs.append(line)
         else:
-            n, r = line.split(' ', 1)
-            rs = []
-            for s in r.split('|'):
-                rs.append(s.strip().split())
-            rules[int(n.rstrip(':'))] = rs
+            rule_num, rule_str = line.split(' ', 1)
+            rule_set = []
+            for s in rule_str.split('|'):
+                rule_set.append(s.strip().split())
+            rules[int(rule_num.rstrip(':'))] = rule_set
                 
-def generate(rule_set, n, pre, part2):
-    subs = []
-    for sub in rule_set[n]:
-        r = []
-        for rule in sub:
+def generate(rule_num, pre, part2):
+    # returns a list of expanded regexes
+    new_rules = []
+    for rule_list in rules[rule_num]:
+        sub_rules = []
+        for rule in rule_list:
             try:
                 rule = int(rule)
-                if rule in pre:
-                    continue # don't cycle
-                x = generate(rules, rule, pre + [rule], part2)
-                if isinstance(x, list):
-                    x = f'({"|".join(x)})' if len(x) > 1 else x[0]
-                if part2 and n == 8:
-                    x += '+'
-                r.append(x)
+                gen = generate(rule, pre + [rule], part2)
+                if isinstance(gen, list):
+                    # a list means any is valid; combine with or
+                    gen = f'({"|".join(gen)})' if len(gen) > 1 else gen[0]
+                if part2 and rule_num == 8:
+                    # new 8: any # of rule 42
+                    gen += '+'
+                sub_rules.append(gen)
             except ValueError:
-                r = [eval(rule)]
-        subs.append(''.join(r))
-    return subs
+                # this is a letter, e.g. "x"
+                sub_rules.append(eval(rule)) # eval clears the quotes
+        new_rules.append(''.join(sub_rules))
+    return new_rules
 
-rule = generate(rules, 0, [], False)
+rule = generate(0, [], False)[0]
 for s in strs:
-    p1 += bool(re.fullmatch(rule[0], s))
+    p1 += bool(re.fullmatch(rule, s))
 
 print(f'Part 1: {p1}')
 
-# new 8: any # of rule 42
 # new 11: any # of rule 42, then same # of 31
-rules[8] = [['42', '8']]
 rules[11] = [
     ['42', '31'],
     ['42', '42', '31', '31'],
@@ -64,7 +64,8 @@ rules[11] = [
     ['42', '42', '42', '42', '42', '31', '31', '31', '31', '31'],
     ['42', '42', '42', '42', '42', '42', '31', '31', '31', '31', '31', '31'],
 ]
-rule = generate(rules, 0, [], True)
+
+rule = generate(0, [], True)[0]
 for s in strs:
-    p2 += bool(re.fullmatch(rule[0], s))
+    p2 += bool(re.fullmatch(rule, s))
 print(f'Part 2: {p2}')
