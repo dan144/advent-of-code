@@ -205,9 +205,9 @@ bot = r'.#..#..#..#..#..#...'
 
 def search(image):
     found = 0
-    for i, line in enumerate(image[1:-1]):
-        for c in range(len(line) - len(mid)):
-            if re.match(mid, ''.join(line[c:])) and re.match(top, ''.join(image[i][c:])) and re.match(bot, ''.join(image[i + 2][c:])):
+    for i in range(len(image[1:-1])):
+        for c in range(len(image[i + 1]) - len(mid)):
+            if re.match(top, ''.join(image[i][c:])) and re.match(mid, ''.join(image[i + 1][c:])) and re.match(bot, ''.join(image[i + 2][c:])):
                 found += 1
     return found
 
