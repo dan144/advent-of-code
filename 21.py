@@ -16,8 +16,7 @@ with open(input_file) as f:
     for line in f:
         data = re.search(r'([a-z ]+) \(contains ([a-z, ]+)\)', line)
         i_ingredients = data.group(1).split()
-        i_allergens = data.group(2).split(', ')
-        for allergen in i_allergens:
+        for allergen in data.group(2).split(', '):
             if allergen not in allergens:
                 allergens[allergen] = set(i_ingredients)
             else:
@@ -34,13 +33,11 @@ while not done:
             food = combined.pop()
             allergens[allergen] = food
             for allergen in set(allergens.keys()) - {allergen}:
-                if food in allergens[allergen]:
+                if isinstance(allergens[allergen], set) and food in allergens[allergen]:
                     allergens[allergen].remove(food)
             done = False # reduced, run again
 
-for ingredient in set(ingredients.keys()) - set(allergens.values()):
-    p1 += ingredients[ingredient]
+p1 = sum(ingredients[ingredient] for ingredient in set(ingredients.keys()) - set(allergens.values()))
 print(f'Part 1: {p1}')
-
 p2 = ','.join(ingredient for _, ingredient in sorted(allergens.items(), key=lambda x: x[0]))
 print(f'Part 2: {p2}')
