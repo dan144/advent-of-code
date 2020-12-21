@@ -35,21 +35,21 @@ print(f'Tiles: {n_tiles}, Board: {board_len}x{board_len}')
 def convert_edge(edges):
     return tuple(int(edge, 2) for edge in edges)
 
-def edge_rotate(top, bottom, left, right):
-    return (left[::-1], right[::-1], bottom, top)
+def edge_rotate(top, left, bottom, right):
+    return (left[::-1], bottom, right[::-1], top)
 
-def edge_xflip(top, bottom, left, right):
-    return (top[::-1], bottom[::-1], right, left)
+def edge_xflip(top, left, bottom, right):
+    return (top[::-1], right, bottom[::-1], left)
 
-def edge_yflip(top, bottom, left, right):
-    return (bottom, top, left[::-1], right[::-1])
+def edge_yflip(top, left, bottom, right):
+    return (bottom, left[::-1], top, right[::-1])
 
 def get_edges(tile):
     top = ''.join(map(str, tile[0]))
     bottom = ''.join(map(str, tile[-1]))
     left = ''.join([str(r[0]) for r in tile])
     right = ''.join([str(r[-1]) for r in tile])
-    return (top, bottom, left, right)
+    return (top, left, bottom, right)
 
 def all_edge_combinations(edges):
     s = set()
@@ -64,16 +64,9 @@ def all_edge_combinations(edges):
 
 edge_map = {
     (0, -1): 0,
-    (0, 1): 1,
-    (-1, 0): 2,
+    (-1, 0): 1,
+    (0, 1): 2,
     (1, 0): 3,
-}
-
-edge_pairs = {
-    0: 1,
-    1: 0,
-    2: 3,
-    3: 2
 }
 
 def fits(board, edges, nx, ny):
@@ -81,7 +74,7 @@ def fits(board, edges, nx, ny):
         cx, cy = nx + dx, ny + dy
         if board.get((cx, cy)):
             new_edge = edge_map[dx, dy]
-            matched_edge = edge_pairs[new_edge]
+            matched_edge = (new_edge + 2) % 4
             if edges[new_edge] != board[cx, cy][1][matched_edge]:
                 return False
     return True
