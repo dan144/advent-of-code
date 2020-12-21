@@ -35,17 +35,14 @@ print(f'Tiles: {n_tiles}, Board: {board_len}x{board_len}')
 def convert_edge(edges):
     return tuple(int(edge, 2) for edge in edges)
 
-def edge_rotate(edges):
-    right, left, top, bottom = edges
-    return (top[::-1], bottom[::-1], left, right)
+def edge_rotate(top, bottom, left, right):
+    return (left[::-1], right[::-1], bottom, top)
 
-def edge_xflip(edges):
-    top, bottom, right, left = edges
-    return (top[::-1], bottom[::-1], left, right)
+def edge_xflip(top, bottom, left, right):
+    return (top[::-1], bottom[::-1], right, left)
 
-def edge_yflip(edges):
-    bottom, top, left, right = edges
-    return (top, bottom, left[::-1], right[::-1])
+def edge_yflip(top, bottom, left, right):
+    return (bottom, top, left[::-1], right[::-1])
 
 def get_edges(tile):
     top = ''.join(map(str, tile[0]))
@@ -58,11 +55,11 @@ def all_edge_combinations(edges):
     s = set()
     r_edges = edges
     for rot in range(4):
-        r_edges = edge_rotate(r_edges)
+        r_edges = edge_rotate(*r_edges)
         s.add(convert_edge(r_edges))
-        s.add(convert_edge(edge_xflip(r_edges)))
-        s.add(convert_edge(edge_yflip(r_edges)))
-        s.add(convert_edge(edge_xflip(edge_yflip(r_edges))))
+        s.add(convert_edge(edge_xflip(*r_edges)))
+        s.add(convert_edge(edge_yflip(*r_edges)))
+        s.add(convert_edge(edge_xflip(*edge_yflip(*r_edges))))
     return s
 
 edge_map = {
@@ -111,10 +108,9 @@ def print_tile(tile):
 # test
 tile = tiles[list(tiles.keys())[0]]
 edges = get_edges(tile)
-assert edges == edge_xflip(edge_xflip(edges)) # prove associative
-assert edges == edge_yflip(edge_yflip(edges)) # see above
-assert edge_xflip(edge_yflip(edges)) == edge_yflip(edge_xflip(edges)) # prove commutative
-assert edges == edge_rotate(edge_rotate(edge_rotate(edge_rotate(edges)))) # 4 rotations == no change
+assert edges == edge_xflip(*edge_xflip(*edges)) == edge_yflip(*edge_yflip(*edges)) # prove 2 flips == no change
+assert edge_xflip(*edge_yflip(*edges)) == edge_yflip(*edge_xflip(*edges)) # prove commutative
+assert edges == edge_rotate(*edge_rotate(*edge_rotate(*edge_rotate(*edges)))) # 4 rotations == no change
 # end test
 
 for n, tile in tiles.items():
@@ -138,17 +134,17 @@ def find_align(num, edges):
     for rot in range(4):
         if edges == convert_edge(t_edges):
             return rot, False, False
-        t_edges = edge_xflip(t_edges)
+        t_edges = edge_xflip(*t_edges)
         if edges == convert_edge(t_edges):
             return rot, True, False
-        t_edges = edge_yflip(t_edges)
+        t_edges = edge_yflip(*t_edges)
         if edges == convert_edge(t_edges):
             return rot, True, True
-        t_edges = edge_xflip(t_edges)
+        t_edges = edge_xflip(*t_edges)
         if edges == convert_edge(t_edges):
             return rot, False, True
-        t_edges = edge_yflip(t_edges)
-        t_edges = edge_rotate(t_edges)
+        t_edges = edge_yflip(*t_edges)
+        t_edges = edge_rotate(*t_edges)
     print('Apparently illegal')
     assert False
 
