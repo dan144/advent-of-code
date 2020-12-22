@@ -41,18 +41,17 @@ def score(deck1, deck2):
 p1 = score(deck1, deck2)
 print(f'Part 1: {p1}')
 
-def check_repeat(deck, prev):
-    d = tuple(deck)
+def check_repeat(deck1, deck2, prev):
+    d = tuple(deck1), tuple(deck2)
     if d in prev:
         return True
     prev.add(d)
     return False
 
 def recurse(deck1, deck2):
-    prevs1 = set()
-    prevs2 = set()
+    prevs = set()
     while True:
-        if check_repeat(deck1, prevs1) or check_repeat(deck2, prevs2):
+        if check_repeat(deck1, deck2, prevs):
             return 1
         if len(deck1) == 0:
             return 2
