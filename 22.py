@@ -1,15 +1,11 @@
 #!/usr/bin/env python3
 
-import re
 import sys
 
 from copy import copy
 
 test = len(sys.argv) > 1
 input_file = 'input' + sys.argv[0].split('.')[1].lstrip('/') + ('.test' if test else '')
-
-p1 = 0
-p2 = 0
 
 deck1 = []
 deck2 = []
@@ -22,12 +18,10 @@ with open(input_file) as f:
                 deck2.append(card)
             else:
                 deck1.append(card)
-        except:
+        except ValueError:
             if line == '\n':
                 in_p2 = True
-            pass
-odeck1 = copy(deck1)
-odeck2 = copy(deck2)
+og_decks = (copy(deck1), copy(deck2))
 
 while deck1 and deck2:
     card1 = deck1.pop(0)
@@ -37,27 +31,29 @@ while deck1 and deck2:
     else:
         deck2 += [card2, card1]
 
-deck = deck1 + deck2
-x = len(deck)
-for i in range(1, x+1):
-    p1 += deck[::-1][i-1] * i
+def score(deck1, deck2):
+    deck = deck1 + deck2
+    score = 0
+    for i in range(len(deck)):
+        score += deck[::-1][i] * (i + 1)
+    return score
+
+p1 = score(deck1, deck2)
 print(f'Part 1: {p1}')
 
-def check(deck, prev):
+def check_repeat(deck, prev):
     d = tuple(deck)
     if d in prev:
         return True
-    prev.add(copy(d))
+    prev.add(d)
     return False
 
 def recurse(deck1, deck2):
-    done = False
     prevs1 = set()
     prevs2 = set()
-    while not done:
-        if check(deck1, prevs1) or check(deck2, prevs2):
+    while True:
+        if check_repeat(deck1, prevs1) or check_repeat(deck2, prevs2):
             return 1
-
         if len(deck1) == 0:
             return 2
         if len(deck2) == 0:
@@ -66,26 +62,19 @@ def recurse(deck1, deck2):
         card1 = deck1.pop(0)
         card2 = deck2.pop(0)
         if len(deck1) < card1 or len(deck2) < card2:
+            # not able to recurse: simple resolution
             if card1 > card2:
                 deck1 += [card1, card2]
             else:
                 deck2 += [card2, card1]
         else:
-            w = recurse(copy(deck1[:card1]), copy(deck2[:card2]))
-            if w == 1:
+            winner = recurse(copy(deck1[:card1]), copy(deck2[:card2]))
+            if winner == 1:
                 deck1 += [card1, card2]
             else:
                 deck2 += [card2, card1]
-    return w
 
-
-deck1 = odeck1
-deck2 = odeck2
-while deck1 and deck2:
-    recurse(deck1, deck2)
-
-deck = deck1 + deck2
-x = len(deck)
-for i in range(1, x+1):
-    p2 += deck[::-1][i-1] * i
+deck1, deck2 = og_decks # reset the decks
+recurse(deck1, deck2)
+p2 = score(deck1, deck2)
 print(f'Part 2: {p2}')
