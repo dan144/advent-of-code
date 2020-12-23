@@ -12,61 +12,61 @@ p2 = 0
 with open(input_file) as f:
     val = list(map(int, list(f.readline()[:-1])))
 
-mx = max(val)
-data = {}
-for i, v in enumerate(val[:-1]):
-    data[v] = val[i+1]
-data[val[i+1]] = mx + 1
-go_to = 1000000
-data.update({x: x + 1 for x in range(mx + 1, go_to)})
-data[go_to] = val[0]
-if go_to < 100:
-    print(data)
-mx = go_to
-
-def show(start):
+def show(data, start):
     n = None
+    cups = ''
     while n != start:
         n = start if n is None else n
         print(n, end=' ')
+        cups += str(n)
         n = data[n]
     print()
+    return cups
 
-next_cup = val[0]
-for move in range(10000000):
-    if move % 10000 == 0:
-        print('Move:', move)
-    current = next_cup
-    # show(current)
-    #print(f'({current})')
-    new = []
-    n = current
-    for i in range(3):
-        n = data[n]
-        new.append(n)
-    next_cup = data[new[-1]]
-    data[current] = next_cup
-    #print('pick up:', new)
-    dest = current
-    while True:
-        try:
-            dest = dest - 1
-            if data[dest] and dest not in new:
-                break
-        except KeyError:
-            dest -= 1
-            if dest < 0:
-                dest = mx + 1
-    #print('destination:', dest)
-    data[new[-1]] = data[dest]
-    data[dest] = new[0]
-    # input()
+def run(cup_list, total_cups, iters):
+    mx = max(cup_list)
+    data = {}
+    for i, v in enumerate(cup_list[:-1]):
+        data[v] = cup_list[i+1]
 
-# idx = val.index(1)
-# p1 = ''.join(map(str, val[idx+1:] + val[:idx]))
-# show(1)
+    if total_cups == len(cup_list):
+        data[cup_list[i+1]] = cup_list[0]
+    else:
+        data[cup_list[i+1]] = mx + 1
+        data.update({x: x + 1 for x in range(mx + 1, total_cups)})
+        mx = total_cups
+        data[mx] = cup_list[0]
+
+    next_cup = cup_list[0]
+    for move in range(iters):
+        if move > 100 and move % 100 == 0:
+            print(f'\r{int(move / iters * 100)}%', end='')
+        current = next_cup
+        new = []
+        n = current
+        for i in range(3):
+            n = data[n]
+            new.append(n)
+        next_cup = data[new[-1]]
+        data[current] = next_cup
+        dest = current
+        while True:
+            try:
+                dest = dest - 1
+                if data[dest] and dest not in new:
+                    break
+            except KeyError:
+                dest -= 1
+                if dest < 0:
+                    dest = mx + 1
+        data[new[-1]] = data[dest]
+        data[dest] = new[0]
+    return data
+
+cups = run(val, len(val), 100)
+p1 = show(cups, 1)[1:]
 print(f'Part 1: {p1}')
 
-print(data[1], data[data[1]])
-p2 = data[1] * data[data[1]]
-print(f'Part 2: {p2}')
+cups = run(val, 1000000, 10000000)
+p2 = cups[1] * cups[cups[1]]
+print(f'\rPart 2: {p2}')
