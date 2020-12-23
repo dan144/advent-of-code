@@ -12,56 +12,59 @@ p2 = 0
 with open(input_file) as f:
     val = list(map(int, list(f.readline()[:-1])))
 
-def show(data, start):
+def show(cups, start):
     n = None
-    cups = ''
+    cups_str = ''
     while n != start:
         n = start if n is None else n
         print(n, end=' ')
-        cups += str(n)
-        n = data[n]
+        cups_str += str(n)
+        n = cups[n]
     print()
-    return cups
+    return cups_str
 
 def run(cup_list, total_cups, iters):
     mx = max(cup_list)
-    data = {}
+    cups = {}
     for i, v in enumerate(cup_list[:-1]):
-        data[v] = cup_list[i+1]
+        cups[v] = cup_list[i+1]
 
     if total_cups == len(cup_list):
-        data[cup_list[i+1]] = cup_list[0]
+        cups[cup_list[i+1]] = cup_list[0]
     else:
-        data[cup_list[i+1]] = mx + 1
-        data.update({x: x + 1 for x in range(mx + 1, total_cups)})
+        cups[cup_list[i+1]] = mx + 1
+        cups.update({x: x + 1 for x in range(mx + 1, total_cups)})
         mx = total_cups
-        data[mx] = cup_list[0]
+        cups[mx] = cup_list[0]
 
     next_cup = cup_list[0]
     for move in range(iters):
         if move > 100 and move % 100 == 0:
             print(f'\r{int(move / iters * 100)}%', end='')
+
         current = next_cup
-        new = []
+
+        move_cups = []
         n = current
         for i in range(3):
-            n = data[n]
-            new.append(n)
-        next_cup = data[new[-1]]
-        data[current] = next_cup
-        dest = current
-        while True:
-            try:
-                dest = dest - 1
-                if data[dest] and dest not in new:
-                    break
-            except KeyError:
-                dest -= 1
-                if dest < 0:
-                    dest = mx + 1
-        data[new[-1]] = data[dest]
-        data[dest] = new[0]
-    return data
+            n = cups[n]
+            move_cups.append(n)
+
+        # skip the cups being moved
+        next_cup = cups[move_cups[-1]]
+        cups[current] = next_cup
+
+        # find the destination cup
+        dest = current - 1
+        while not cups.get(dest) or dest in move_cups:
+            dest = (dest - 1) % (mx + 1)
+
+        # point the moved cups to where the destination cup used to point
+        cups[move_cups[-1]] = cups[dest]
+        # point the destination cup at the moved cups
+        cups[dest] = move_cups[0]
+
+    return cups
 
 cups = run(val, len(val), 100)
 p1 = show(cups, 1)[1:]
