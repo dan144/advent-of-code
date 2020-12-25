@@ -7,12 +7,10 @@ test = len(sys.argv) > 1
 input_file = 'input' + sys.argv[0].split('.')[1].lstrip('/') + ('.test' if test else '')
 
 with open(input_file) as f:
-    inp = [line[:-1] for line in f]
+    inp = [line.rstrip() for line in f]
 
 WHITE = False
 BLACK = True
-poss_moves = {'e', 'se', 'sw', 'w', 'nw', 'ne'}
-re_moves = re.compile('|'.join(poss_moves))
 
 # moves in a hex grid
 change = {
@@ -23,8 +21,10 @@ change = {
     'nw': (-1, 1),
     'ne': (1, 1),
 }
+re_moves = re.compile('|'.join(change.keys()))
 
 def surround_all(grid):
+    # ensure all WHITE edges, update in place
     for x, y in list(grid.keys()):
         if grid[x, y] is WHITE:
             # white spaces' neighbors don't need to be added since they won't flip
