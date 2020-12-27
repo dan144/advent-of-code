@@ -21,7 +21,7 @@ if [ ! -d $YEAR ]; then
     mkdir -p $YEAR
 fi
 
-if [ ! -f $YEAR/$DAY ]; then
+if [ ! -f $YEAR/$DAY.py ]; then
     cp utilities/framework.py $YEAR/$DAY.py
 fi
 
