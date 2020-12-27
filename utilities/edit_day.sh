@@ -17,7 +17,7 @@ fi
 
 [ $(basename $(pwd)) == "utilities" ] && cd ..
 
-if [ -d $YEAR ]; then
+if [ ! -d $YEAR ]; then
     mkdir -p $YEAR
 fi
 
