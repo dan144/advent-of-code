@@ -1,4 +1,5 @@
 *.swp
 input*
 !*.test
-__pycache__/
+.gitconfig
+__pycache__/*
