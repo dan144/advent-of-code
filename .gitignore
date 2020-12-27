@@ -3,3 +3,7 @@ input*
 !*.test
 .gitconfig
 __pycache__/*
+.stack-work/
+*~
+*.swp
+*/target/*
