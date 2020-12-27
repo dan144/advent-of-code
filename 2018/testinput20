@@ -1,0 +1,15 @@
+{"part_one": 31, "part_two": 0}
+^WSSEESWWWNW(S|NENNEEEENN(ESSSSW(NWSW|SSEN)|WSWWN(E|WWS(E|SS))))$
+31
+
+^ENWWW(NEEE|SSE(EE|N))$
+10
+
+^ESSWWN(E|NNENN(EESS(WNSE|)SSS|WWWSSSSE(SW|NNNE)))$
+23
+
+^WNE$
+3
+
+^(W|E)S$
+should be 2 but my solution gives 1
