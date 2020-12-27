@@ -2,7 +2,7 @@
 input*
 !*.test
 .gitconfig
-__pycache__/*
+**/__pycache__/*
 .stack-work/
 *~
 *.swp
