@@ -12,7 +12,7 @@ p2 = 0
 inp = []
 with open(input_file) as f:
     for line in f:
-        inp.append(line)
+        inp.append(line.rstrip())
 
 print(f'Part 1: {p1}')
 

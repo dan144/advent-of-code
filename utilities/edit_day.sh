@@ -4,7 +4,6 @@ set -eu
 
 YEAR=$1
 DAY=$(printf "%02d" $2)
-echo $DAY
 
 if [ $YEAR -lt 2015 ] || [ $YEAR -gt 2020 ]; then
     echo "Year $YEAR not valid"
@@ -20,6 +19,10 @@ fi
 
 if [ -d $YEAR ]; then
     mkdir -p $YEAR
+fi
+
+if [ ! -f $YEAR/$DAY ]; then
+    cp utilities/framework.py $YEAR/$DAY.py
 fi
 
 vim -p $YEAR/$DAY.py $YEAR/input$DAY $YEAR/input$DAY.test
