@@ -9,7 +9,6 @@ input_file = 'input' + sys.argv[0].split('.')[1].lstrip('/') + ('.test' if test 
 p1 = 0
 p2 = 0
 
-inp = []
 with open(input_file) as f:
     num = f.readline().rstrip()
 

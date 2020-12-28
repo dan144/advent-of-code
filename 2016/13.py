@@ -13,7 +13,6 @@ dest = (7,4) if test else (31,39)
 
 mx, my = dest[0] * 2, dest[1] * 2
 
-inp = []
 with open(input_file) as f:
     num = int(f.readline().rstrip())
 
