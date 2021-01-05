@@ -9,36 +9,22 @@ input_file = 'input' + sys.argv[0].split('.')[1].lstrip('/') + ('.test' if test 
 p1 = 0
 p2 = 0
 
-inp = []
 with open(input_file, 'r') as f:
-    ans = set()
+    ans1 = set()
+    ans2 = None
     for line in f:
         if line == '\n':
-            inp.append(ans)
-            ans = set()
+            p1 += len(ans1)
+            p2 += len(ans2)
+            ans1 = set()
+            ans2 = None
         else:
-            ans.update(list(line[:-1]))
-inp.append(ans)
-
-for group in inp:
-    p1 += len(group)
-
-print(f'Part 1: {p1}')
-
-with open(input_file, 'r') as f:
-    ans = set()
-    first = True
-    for line in f:
-        if line == '\n':
-            p2 += len(ans)
-            ans = set()
-            first = True
-        else:
-            if first is True:
-                ans = set(list(line[:-1]))
-                first = False
+            ans1.update(list(line[:-1]))
+            if ans2 is None:
+                ans2 = set(list(line[:-1]))
             else:
-                ans = ans.intersection(set(list(line[:-1])))
-p2 += len(ans)
-
+                ans2 = ans2.intersection(set(list(line[:-1])))
+p1 += len(ans1)
+p2 += len(ans2)
+print(f'Part 1: {p1}')
 print(f'Part 2: {p2}')
