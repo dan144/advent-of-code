@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	file, err := os.Open("input/10")
+	file, err := os.Open("input10")
 	if err != nil {
 		log.Fatal(err)
 	}

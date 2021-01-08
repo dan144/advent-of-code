@@ -10,7 +10,7 @@ nums = re.findall(r'-?\d+', inp)
 ans = sum(map(int, nums))
 print(f'Part 1: {ans}')
 
-with open('input/12', 'r') as f:
+with open('input12', 'r') as f:
     inp = json.load(f)
 
 total = 0

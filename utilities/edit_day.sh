@@ -21,8 +21,13 @@ if [ ! -d $YEAR ]; then
     mkdir -p $YEAR
 fi
 
-if [ ! -f $YEAR/$DAY.py ]; then
-    cp utilities/framework.py $YEAR/$DAY.py
+if ls $YEAR/$DAY*; then
+    FILENAME="$YEAR/$DAY*"
+else
+    FILENAME="$YEAR/$DAY.py"
+    if [ ! -f $YEAR/$DAY.py ]; then
+        cp utilities/framework.py $FILENAME
+    fi
 fi
 
-vim -p $YEAR/$DAY.py $YEAR/input$DAY $YEAR/input$DAY.test
+vim -p $FILENAME $YEAR/input$DAY $YEAR/input$DAY.test
