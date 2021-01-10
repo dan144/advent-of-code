@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 
+import itertools
 import re
 import sys
+
+import utils
 
 test = len(sys.argv) > 1
 input_file = 'input' + sys.argv[0].split('.')[1].lstrip('/') + ('.test' if test else '')

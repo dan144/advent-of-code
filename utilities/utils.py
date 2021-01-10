@@ -1,5 +1,6 @@
 # utility functions for advent of code
 
+### load functions
 def load_grid(f):
     grid = {}
     for x, line in enumerate(f.readlines()):
@@ -7,11 +8,13 @@ def load_grid(f):
             grid[x, y] = c
     return grid
 
-def find_dist(grid, go_from, go_to):
-    assert go_from in grid.keys()
-    assert go_to in grid.keys()
-    steps = 0
+def load_num_lines(f):
+    nums = []
+    for line in f:
+        nums.append(int(line.rstrip()))
+    return nums
 
+### util functions
 adjs = {(-1, 0), (1, 0), (0, -1), (0, 1)}
 
 def find_dist(grid, dist, locs, dest):
