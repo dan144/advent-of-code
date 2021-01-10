@@ -31,10 +31,10 @@ for l1 in sorted(nums):
     for l2 in sorted(nums):
         if l1 == l2:
             continue
-        if (l1, l2) in dists.keys():
+        k = tuple(sorted((l1, l2)))
+        if k in dists.keys():
             continue
-        dist = utils.find_dist(grid, 0, {l1}, l2)
-        dists[l1, l2] = dist
+        dists[k] = utils.find_dist(grid, 0, {l1}, l2)
 
 nums.remove(start)
 for path in itertools.permutations(nums):
