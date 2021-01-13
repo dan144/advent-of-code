@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import itertools
 import sys
 
 test = len(sys.argv) > 1
@@ -15,15 +16,12 @@ with open(input_file, 'r') as f:
 
 n = len(inp)
 
-for a in range(n):
-    for b in range(n):
-        if a != b and inp[a] + inp[b] == 2020:
-            p1 = inp[a] * inp[b]
+for a, b in itertools.product(range(n), repeat=2):
+    if a != b and inp[a] + inp[b] == 2020:
+        p1 = inp[a] * inp[b]
 print(f'Part 1: {p1}')
 
-for a in range(n):
-    for b in range(n):
-        for c in range(n):
-            if a != b and b != c and c != a and inp[a] + inp[b] + inp[c] == 2020:
-                p2 = inp[a] * inp[b] * inp[c]
+for a, b, c in itertools.product(range(n), repeat=3):
+    if a != b and b != c and c != a and inp[a] + inp[b] + inp[c] == 2020:
+        p2 = inp[a] * inp[b] * inp[c]
 print(f'Part 2: {p2}')
