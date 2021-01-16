@@ -43,14 +43,12 @@ p2 = 0
 while s != 'e':
     # search longest to shortest replacement
     for f, t in sorted(back_reps.items(), key=lambda x: len(x[0]), reverse=True):
-        for i in range(len(s)):
-            if t == 'e':
-                if s != f:
-                    continue # don't insert "e" until it means you're done
-            match = re.match(f, s[i:])
-            if match:
-                p2 += 1
-                s = s[:i+match.start(0)] + t + s[i+match.end(0):]
-                break
+        if t == 'e' and s != f:
+            continue
+        while f in s:
+            match = re.search(f, s)
+            p2 += 1
+            s = s[:match.start(0)] + t + s[match.end(0):]
+            break
 
 print(f'Part 2: {p2}')
