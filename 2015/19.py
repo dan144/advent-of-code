@@ -1,9 +1,13 @@
-#!/usr/bin/python3.6
+#!/usr/bin/python3
 
 import re
+import sys
+
+test = len(sys.argv) > 1
+input_file = 'input' + sys.argv[0].split('.')[1].lstrip('/') + ('.test' if test else '')
 
 reps = {}
-with open('input/19', 'r') as f:
+with open(input_file) as f:
     for line in f:
         if line == '\n':
             continue
@@ -24,4 +28,29 @@ for k, vs in reps.items():
             new = ''.join(s[:match.start(0)] + list(v) + s[match.end(0):])
             ans.add(new)
 
-print(f'Part 1: {len(ans)}')
+p1 = len(ans)
+print(f'Part 1: {p1}')
+
+# invert to backtrace
+back_reps = {}
+for f, ts in reps.items():
+    for t in ts:
+        assert t not in back_reps
+        back_reps[t] = f
+
+s = ''.join(s)
+p2 = 0
+while s != 'e':
+    # search longest to shortest replacement
+    for f, t in sorted(back_reps.items(), key=lambda x: len(x[0]), reverse=True):
+        for i in range(len(s)):
+            if t == 'e':
+                if s != f:
+                    continue # don't insert "e" until it means you're done
+            match = re.match(f, s[i:])
+            if match:
+                p2 += 1
+                s = s[:i+match.start(0)] + t + s[i+match.end(0):]
+                break
+
+print(f'Part 2: {p2}')
