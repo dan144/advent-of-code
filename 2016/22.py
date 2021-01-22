@@ -3,6 +3,8 @@
 import re
 import sys
 
+import utils
+
 test = len(sys.argv) > 1
 input_file = 'input' + sys.argv[0].split('.')[1].lstrip('/') + ('.test' if test else '')
 
@@ -32,11 +34,8 @@ for l1 in nodes.keys():
 
 print(f'Part 1: {p1}')
 
-max_x = max({x if y == 0 else 0 for x, y in nodes.keys()})
-max_y = max({y for _, y in nodes.keys()})
-want = [max_x, 0]
-
 def display(nodes):
+    max_y = max({y for _, y in nodes.keys()})
     for y in range(max_y+1):
         for (mx, my), data in nodes.items():
             if my != y:
@@ -47,13 +46,15 @@ def display(nodes):
 if test:
     display(nodes)
 
-# pattern found by hand
 # 1. move blocks to empty slot left of goal data (28 steps for my input)
 # 2. move goal into empty slot
 # 3. cycle blocks around goal data and move goal toward 0,0 - 5 steps each
 
-def empty_to_goal():
-    return 2 if test else 29
+max_x = max({x if y == 0 else 0 for x, y in nodes.keys()}) - 1
 
-p2 = empty_to_goal() + 5 * (max_x - 1)
+# determine legal distance from empty to target node
+grid = {(x, y): data[0] < 100 for (x, y), data in nodes.items()}
+first_dist = utils.find_dist(grid, 0, {empty_node}, (max_x, 0))
+
+p2 = first_dist + 1 + 5 * max_x
 print(f'Part 2: {p2}')
