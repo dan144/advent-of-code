@@ -3,6 +3,8 @@
 import json
 import sys
 
+import utils
+
 print('Running:',sys.argv[0])
 
 testing = len(sys.argv) == 2
@@ -61,15 +63,9 @@ for line in inputs:
 
 max_radius = maxd[3]
 
-def man_dist(drone_a, drone_b):
-    d = 0
-    for i in range(3):
-        d += abs(drone_a[i] - drone_b[i])
-    return d
-
 ans = 0
 for drone in drones:
-    if man_dist(drone, maxd) <= max_radius:
+    if utils.manh(drone[:3], maxd[:3]) <= max_radius:
         ans += 1
 
 print(ans)
@@ -91,7 +87,7 @@ def parse(spots):
         in_range = 0
         for drone in drones:
             #print(spot, drone)
-            in_range += 1 if man_dist(spot, drone) <= drone[3] else 0
+            in_range += 1 if utils.manh(spot, drone[:3]) <= drone[3] else 0
         if in_range > most_in_range:
             most_in_range = in_range
             closest = spot
@@ -139,7 +135,7 @@ most_dist = 78687716
 while spots:
     in_range, closest = parse(spots)
     if closest:
-        m_dist = man_dist((0,0,0), closest)
+        m_dist = utils.manh(closest)
         #print(len(spots), m_dist)
         if in_range > most_in_range or (in_range == most_in_range and m_dist < most_dist):
             most_in_range = in_range
@@ -158,7 +154,7 @@ while spots:
             if z+dz < mins[2] or z+dz > maxs[2]:
                 continue
             to_add = (x+dx, y+dy, z+dz)
-            if to_add not in seen and man_dist(to_add, (0,0,0)) < most_dist:
+            if to_add not in seen and utils.manh(to_add) < most_dist:
                 n.add(to_add)
     spots = n
 

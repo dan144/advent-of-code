@@ -2,6 +2,8 @@
 
 import sys
 
+import utils
+
 test = len(sys.argv) > 1
 input_file = 'input' + sys.argv[0].split('.')[1].lstrip('/') + ('.test' if test else '')
 
@@ -24,7 +26,7 @@ direc = 1
 x, y = 0, 0
 for act, dist in inp:
     if act in 'LR':
-        act = dirs[(direc + moves[act] * dist // 90) % 4]
+        direc = (direc + moves[act] * dist // 90) % 4
     else:
         if act == 'F':
             act = dirs[direc]
@@ -32,7 +34,7 @@ for act, dist in inp:
         x += dx * dist
         y += dy * dist
 
-p1 = abs(x) + abs(y)
+p1 = utils.manh((x, y))
 print(f'Part 1: {p1}')
 
 direc = 1
@@ -50,5 +52,5 @@ for act, dist in inp:
         wx += dx * dist
         wy += dy * dist
 
-p2 = abs(x) + abs(y)
+p2 = utils.manh((x, y))
 print(f'Part 2: {p2}')

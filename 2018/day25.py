@@ -3,6 +3,8 @@
 import json
 import sys
 
+import utils
+
 print('Running:',sys.argv[0])
 
 testing = len(sys.argv) == 2
@@ -37,12 +39,6 @@ consts = []
 for line in inputs:
     consts.append([tuple(map(int, line.split(',')))])
 
-def man_dist(a, b):
-    d = 0
-    for i in range(4):
-        d += abs(a[i]-b[i])
-    return d
-
 new = True
 while new:
     new = False
@@ -56,7 +52,7 @@ while new:
                 continue
             for a in consts[i]:
                 for b in consts[j]:
-                    if man_dist(a, b) <= 3:
+                    if utils.manh(a, b) <= 3:
                         consts[i].extend(consts[j])
                         new = True
                         removed.add(j)

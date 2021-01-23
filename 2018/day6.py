@@ -3,6 +3,8 @@
 import json
 import sys
 
+import utils
+
 print('Running:',sys.argv[0])
 
 testing = len(sys.argv) == 2
@@ -64,7 +66,7 @@ for x in range(min_x, max_x + 1):
         dist_from = 0
         for n in range(len(coords)):
             coord = coords[n]
-            man_d = abs(coord[0] - x) + abs(coord[1] - y)
+            man_d = utils.manh(coord[:2], (x, y))
             if min_d is None or man_d < min_d:
                 min_d = man_d
                 val = n

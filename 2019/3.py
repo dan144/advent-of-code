@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+import utils
+
 inp = []
 with open('3', 'r') as f:
     inp1 = f.readline().split(',')
@@ -32,7 +34,7 @@ w1 = parse(inp1)
 w2 = parse(inp2)
 
 for point in w1 & w2:
-    md = abs(point[0]) + abs(point[1])
+    md = utils.manh(point)
     p1 = md if p1 == 0 or md < p1 else p1
     p2 = steps[point] if p2 == 0 or steps[point] < p2 else p2
 

@@ -2,6 +2,8 @@
 
 import sys
 
+import utils
+
 test = len(sys.argv) > 1
 input_file = 'input' + sys.argv[0].split('.')[1].lstrip('/') + ('.test' if test else '')
 
@@ -25,9 +27,9 @@ for d in dirs:
         else:
             x += 1 if direction == 1 else -1
         if (x, y) in visited and not p2:
-            p2 = abs(x) + abs(y)
+            p2 = utils.manh((x, y))
         visited.add((x, y))
 
-p1 = abs(x) + abs(y)
+p1 = utils.manh((x, y))
 print(f'Part 1: {p1}')
 print(f'Part 2: {p2}')

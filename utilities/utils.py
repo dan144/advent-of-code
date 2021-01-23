@@ -31,7 +31,11 @@ def find_dist(grid, dist, locs, dest):
         return find_dist(grid, dist + 1, new_froms, dest)
     return -1
 
-def manh(p1, p2):
-    x1, y1 = p1
-    x2, y2 = p2
-    return abs(x2 - x1) + abs(y2 - y1)
+def manh(p1, p2=None):
+    assert p2 is None or len(p1) == len(p2)
+    d = 0
+    for i in range(len(p1)):
+        a = p1[i]
+        b = p2[i] if p2 else 0
+        d += abs(a - b)
+    return d
