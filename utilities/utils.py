@@ -14,6 +14,9 @@ def load_num_lines(f):
         nums.append(int(line.rstrip()))
     return nums
 
+def load_one_line_of_nums(f):
+    return list(map(int, f.readline().rstrip().split()))
+
 ### util functions
 adjs = {(-1, 0), (1, 0), (0, -1), (0, 1)}
 
