@@ -1,10 +1,6 @@
 #!/usr/bin/env python3
 
-import itertools
-import re
 import sys
-
-import utils
 
 from blist import blist
 
@@ -19,17 +15,13 @@ with open(input_file) as f:
 
 pos = 0
 nums = blist([0])
-for i in range(1, 2017 + 1):
-    pos = (pos + steps) % len(nums) + 1
-    nums.insert(pos, i)
-
-idx = nums.index(2017)
-p1 = nums[(idx + 1) % len(nums)]
-print(f'Part 1: {p1}')
-
-for i in range(i + 1, 50000000 + 1):
+for i in range(1, 50000000 + 1):
     if i % 100000 == 0:
         print(f'\r{i}', end='')
+    if i == 2018:
+        idx = nums.index(2017)
+        p1 = nums[(idx + 1) % len(nums)]
+        print(f'Part 1: {p1}')
     pos = (pos + steps) % len(nums) + 1
     nums.insert(pos, i)
 
