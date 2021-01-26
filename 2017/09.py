@@ -12,18 +12,12 @@ inp = []
 with open(input_file) as f:
     inp = f.readline().rstrip()
 
-# remove !.
-while '!' in inp:
-    l = inp.index('!')
-    inp = inp[:l] + inp[l+2:]
+inp = re.sub(r'!.', '', inp)
 
 # remove garbage, counting its len
-match = True
-while match:
-    match = re.search(r'<[^>]*>', inp)
-    if match:
-        inp = inp[:match.start()] + inp[match.end():]
-        p2 += match.end() - match.start() - 2
+for match in re.findall(r'<[^>]*>', inp):
+    p2 += len(match) - 2
+inp = re.sub(r'<[^>]*>', '', inp)
 
 def dig(l, level):
     t = level
