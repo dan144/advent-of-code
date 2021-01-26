@@ -18,6 +18,23 @@ def load_one_line_of_nums(f):
     return list(map(int, f.readline().rstrip().split()))
 
 ### util functions
+
+# graph functions
+def get_grid_edges(grid):
+    mnx = min({x for x, y in grid.keys()})
+    mny = min({y for x, y in grid.keys()})
+    mxx = max({x for x, y in grid.keys()})
+    mxy = max({y for x, y in grid.keys()})
+    return mnx, mny, mxx, mxy
+
+def display_grid(grid):
+    mnx, mny, mxx, mxy = get_grid_edges(grid)
+
+    for x in range(mnx, mxx + 1):
+        for y in range(mny, mxy + 1):
+            print(grid.get((x, y), ' '), end='')
+        print()
+
 adjs = {(-1, 0), (1, 0), (0, -1), (0, 1)}
 
 def find_dist(grid, dist, locs, dest):
