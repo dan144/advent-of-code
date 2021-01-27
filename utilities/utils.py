@@ -17,6 +17,12 @@ def load_num_lines(f):
 def load_one_line_of_nums(f):
     return list(map(int, f.readline().rstrip().split()))
 
+def load_split_lines(f):
+    inp = []
+    for line in f:
+        inp.append(line.rstrip().split())
+    return inp
+
 ### util functions
 
 # graph functions
