@@ -2,11 +2,10 @@
 
 ### load functions
 def load_grid(f):
-    grid = {}
-    for x, line in enumerate(f.readlines()):
-        for y, c in enumerate(line.rstrip()):
-            grid[x, y] = c
-    return grid
+    lines = []
+    for line in f:
+        lines.append(line)
+    return parse_grid(lines)
 
 def load_num_lines(f):
     nums = []
@@ -43,6 +42,13 @@ def display_grid(grid):
         for y in range(mny, mxy + 1):
             print(grid.get((x, y), ' '), end='')
         print()
+
+def parse_grid(lines):
+    grid = {}
+    for x, line in enumerate(lines):
+        for y, c in enumerate(line.rstrip()):
+            grid[x, y] = c
+    return grid
 
 adjs = {(-1, 0), (1, 0), (0, -1), (0, 1)}
 
