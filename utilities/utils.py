@@ -1,5 +1,7 @@
 # utility functions for advent of code
 
+import math
+
 ### load functions
 def load_grid(f):
     lines = []
@@ -74,3 +76,9 @@ def manh(p1, p2=None):
         b = p2[i] if p2 else 0
         d += abs(a - b)
     return d
+
+def is_prime(n):
+    for factor in range(2, int(math.sqrt(n)) + 1):
+        if (n / factor) % 1 == 0:
+            return False
+    return True

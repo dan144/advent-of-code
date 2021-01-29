@@ -18,8 +18,9 @@ def run(debug):
     regs = {k: 0 for k in 'abcdefgh'}
     regs['a'] = 1 if debug else 0
     while ip in range(len(cmds)):
-        if debug:
-            print(f'\r{regs}', end='')
+        if debug and ip >= 9:
+            # short circuit execution, necessary registers set
+            return regs
         cmd = cmds[ip]
         op = cmd[0]
         if op == 'set':
@@ -62,5 +63,8 @@ run(False)
 print(f'Part 1: {p1}')
 
 regs = run(True)
-p2 = regs['h']
+# count number of composite numbers between regs b and c, inclusive
+p2 = 0
+for n in range(regs['b'], regs['c'] + 1, 17):
+    p2 += 0 if utils.is_prime(n) else 1
 print(f'Part 2: {p2}')
