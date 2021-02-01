@@ -14,6 +14,7 @@ with open(input_file) as f:
 
 paren = re.compile('\(\d+x\d+\)')
 r = re.compile('[A-Z]|\(\d+x\d+\)')
+
 markers = r.findall(inp)
 i = 0
 while i < len(markers):
@@ -35,20 +36,28 @@ while i < len(markers):
 p1 = len(''.join(markers))
 print(f'Part 1: {p1}')
 
-def dig(markers):
+def dig(markers, recurse):
     total = 0
-    i = 0
-    while i < len(markers):
-        if '(' in markers[i]:
-            c, n = map(int, re.findall(r'\d+', marker))
+    while markers:
+        if '(' in markers[0]:
+            c, n = map(int, re.findall(r'\d+', markers[0]))
             new = []
-            j = i + 1
-            while len(''.join(new)) != c:
-                new.append(markers.pop(j + 1))
-            total += n * dig(new * n + markers[j+1:])
-        i += 1
+            while len(''.join(new)) < c:
+                new.append(markers.pop(1))
+
+            if recurse:
+                total += n * dig(new, recurse)
+            else:
+                total += n * len(new)
+        else:
+            total += len(markers[0])
+        markers.pop(0)
     return total
 
+#markers = r.findall(inp)
+#p1 = dig(markers, False)
+#print(f'Part 1: {p1}')
+
 markers = r.findall(inp)
-p2 = dig(markers)
+p2 = dig(markers, True)
 print(f'Part 2: {p2}')
