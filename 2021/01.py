@@ -14,8 +14,7 @@ p2 = 0
 
 inp = []
 with open(input_file) as f:
-    for line in f:
-        inp.append(int(line.rstrip()))
+    inp = utils.load_num_lines(f)
 
 for x in range(len(inp)):
     if inp[x] > inp[x-1]:

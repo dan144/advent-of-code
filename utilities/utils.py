@@ -4,6 +4,7 @@ import math
 
 ### load functions
 def load_grid(f):
+    # returns a dict with (x,y) -> <char> values
     lines = []
     for line in f:
         lines.append(line)
@@ -55,6 +56,8 @@ def parse_grid(lines):
 adjs = {(-1, 0), (1, 0), (0, -1), (0, 1)}
 
 def find_dist(grid, dist, locs, dest):
+    # recursively find distance (initially 0) from locs (initially source) to dest
+    # locs is set(x,y tuple), dest is x,y tuple
     # grid: open=True, wall=False
     new_froms = set()
     for x, y in locs:
@@ -69,6 +72,7 @@ def find_dist(grid, dist, locs, dest):
     return -1
 
 def manh(p1, p2=None):
+    # n-dim Manhattan distance
     assert p2 is None or len(p1) == len(p2)
     d = 0
     for i in range(len(p1)):

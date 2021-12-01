@@ -5,7 +5,7 @@ set -eu
 YEAR=$1
 DAY=$(printf "%02d" $2)
 
-if [ $YEAR -lt 2015 ] || [ $YEAR -gt 2020 ]; then
+if [ $YEAR -lt 2015 ] || [ $YEAR -gt 2021 ]; then
     echo "Year $YEAR not valid"
     exit 1
 fi
