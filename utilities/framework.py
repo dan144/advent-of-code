@@ -17,7 +17,10 @@ with open(input_file) as f:
     for line in f:
         inp.append(line.rstrip())
 
+# Part 1
+
 print(f'Part 1: {p1}')
 
+# Part 2
 
 print(f'Part 2: {p2}')
