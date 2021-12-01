@@ -17,22 +17,18 @@ with open(input_file) as f:
     for line in f:
         inp.append(int(line.rstrip()))
 
-vals = []
-prev = None
-for val in inp:
-    if prev is not None:
-        if val > prev:
-            p1 += 1
-    prev = val
-    vals.append(val)
+for x in range(len(inp)):
+    if inp[x] > inp[x-1]:
+        p1 += 1
 print(f'Part 1: {p1}')
 
 windows = []
-for x in range(len(vals)-2):
+for x in range(len(inp)-2):
     window = 0
     for y in range(3):
-        window += vals[x+y]
+        window += inp[x+y]
     windows.append(window)
+
 for x in range(1, len(windows)):
     if windows[x] > windows[x-1]:
         p2 += 1
