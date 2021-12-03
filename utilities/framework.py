@@ -21,6 +21,7 @@ p2 = 0
 inp = []
 with open(input_file) as f:
     for line in f:
+        inp.append(line.strip())
         pass # if need custom
     inp = utils.load_num_lines(f) # one int per line
     inp = utils.load_comma_sep_nums(f) # 1,2,3,...

@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
 
-from copy import copy
-import itertools
-import re
 import sys
 
 import utils
@@ -43,14 +40,12 @@ for i in range(len(z)):
         g += '1'
         e += '0'
 
-g = int(g, 2)
-e = int(e, 2)
-p1 = g * e
+p1 = int(g, 2) * int(e, 2)
 print(f'Part 1: {p1}')
 
 # Part 2
 for t in range(2):
-    nums = copy(inp)
+    nums = set(inp)
     i = 0
     while len(nums) > 1:
         z, o = 0, 0
@@ -59,17 +54,13 @@ for t in range(2):
                 z += 1
             else:
                 o += 1
+
         if t == 0: # oxygen, most common
-            if o >= z:
-                d = '1'
-            else:
-                d = '0'
-        else:
-            if o >= z:
-                d = '0'
-            else:
-                d = '1'
-        nums = list(filter(lambda x: x[i] == d, nums))
+            d = '1' if o >= z else '0'
+        else: # CO2, least common
+            d = '0' if o >= z else '1'
+
+        nums = set(filter(lambda x: x[i] == d, nums))
         i += 1
     p2 *= int(nums.pop(), 2)
 
