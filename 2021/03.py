@@ -42,12 +42,13 @@ for t in range(2):
     while len(nums) > 1:
         o_less_z = 0
         for num in nums:
-            o_less_z += 1 if num[i] == '1' else -1
+            o_less_z += [-1, 1][num[i] == '1']
 
         if t == 0: # oxygen, most common
-            d = '1' if o_less_z >= 0 else '0'
+            d = '01'[o_less_z >= 0]
         else: # CO2, least common
-            d = '0' if o_less_z >= 0 else '1'
+            d = '10'[o_less_z >= 0]
+        # simple but complicated: d = '10'[(o_less_z >= 0) == (t == 0)]
 
         nums = set(filter(lambda x: x[i] == d, nums))
         i += 1
