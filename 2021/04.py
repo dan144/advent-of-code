@@ -7,18 +7,13 @@ import utils
 test = len(sys.argv) > 1
 input_file = 'input' + sys.argv[0].split('.')[1].lstrip('/') + ('.test' if test else '')
 
-p1 = 0
-p2 = 0
-
-inp = []
 with open(input_file) as f:
     inp = utils.load_split_lines(f) # asdf asdf asdf ...
 
-# Part 1
 nums = []
 boards = None
-
 board = []
+
 for line in inp:
     if not line:
         if boards is None:
@@ -59,7 +54,6 @@ def score(board, num):
                 sub += int(lnum)
     return sub * int(num)
 
-winner = None
 winners = set()
 for num in nums:
     for i, board in enumerate(boards):
@@ -69,13 +63,15 @@ for num in nums:
                 assert x != -1
                 line[x] = int(num)
         if wins(board):
-            if winner is None:
-                winner = i
+            if not winners:
                 p1 = score(board, num)
             winners.add(i)
             if len(winners) == len(boards):
-                if p2 == 0:
-                    p2 = score(board, num)
+                p2 = score(board, num)
+                break
+    else:
+        continue
+    break
 
 print(f'Part 1: {p1}')
 print(f'Part 2: {p2}')
