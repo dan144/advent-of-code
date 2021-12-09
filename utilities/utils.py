@@ -3,12 +3,12 @@
 import math
 
 ### load functions
-def load_grid(f):
+def load_grid(f, cast_to=str):
     # returns a dict with (x,y) -> <char> values
     lines = []
     for line in f:
         lines.append(line)
-    return parse_grid(lines)
+    return parse_grid(lines, cast_to)
 
 def load_num_lines(f):
     nums = []
@@ -46,14 +46,16 @@ def display_grid(grid):
             print(grid.get((x, y), ' '), end='')
         print()
 
-def parse_grid(lines):
+def parse_grid(lines, cast_to=str):
     grid = {}
     for x, line in enumerate(lines):
         for y, c in enumerate(line.rstrip()):
-            grid[x, y] = c
+            grid[x, y] = cast_to(c)
     return grid
 
 adjs = {(-1, 0), (1, 0), (0, -1), (0, 1)}
+diags = {(-1, -1), (1, -1), (1, -1), (1, 1)}
+all_dirs = adjs | diags
 
 def find_dist(grid, dist, locs, dest):
     # recursively find distance (initially 0) from locs (initially source) to dest

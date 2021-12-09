@@ -11,6 +11,9 @@ import utils
 # find_dist(grid, 0, (x,y) start, (x,y) dest) - open=True, wall=False
 # manh(p1[, p2]) - n-dim Manhattan dist; omit p2 for dist from origin
 # is_prime
+# adjs - set of dx,dy values for LRUD adjacencies
+# diags - set of dx,dy values for diagonals
+# all_dirs set of dx,dy values for all 8 surrounding values
 
 test = len(sys.argv) > 1
 input_file = 'input' + sys.argv[0].split('.')[1].lstrip('/') + ('.test' if test else '')
