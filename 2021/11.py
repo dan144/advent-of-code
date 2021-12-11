@@ -1,17 +1,12 @@
 #!/usr/bin/env python3
 
 from copy import copy
-import itertools
-import re
+
 import sys
 
 import utils
 ### available functions:
-# get_grid_edges: min_x, min_y, max_x, max_y
 # display_grid
-# find_dist(grid, 0, (x,y) start, (x,y) dest) - open=True, wall=False
-# manh(p1[, p2]) - n-dim Manhattan dist; omit p2 for dist from origin
-# is_prime
 # adjs - set of dx,dy values for LRUD adjacencies
 # diags - set of dx,dy values for diagonals
 # all_dirs set of dx,dy values for all 8 surrounding values
@@ -30,7 +25,7 @@ def step(inp):
     n_flash = 0
     flashes = set()
     for (x, y), energy in copy(inp).items():
-        inp[x,y] += 1
+        inp[x, y] += 1
         if inp[x, y] > 9:
             flashes.add((x, y))
 
@@ -59,11 +54,8 @@ for _ in range(100):
 print(f'Part 1: {p1}')
 
 # Part 2
-def sync(inp):
-    return len(set(inp.values())) == 1
-
-p2 = 100
-while not sync(inp):
+p2 = 100 # known from part 1; if converged earlier this will be wrong
+while len(set(inp.values())) > 1:
     step(inp)
     p2 += 1
 print(f'Part 2: {p2}')
