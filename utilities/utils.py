@@ -54,7 +54,7 @@ def parse_grid(lines, cast_to=str):
     return grid
 
 adjs = {(-1, 0), (1, 0), (0, -1), (0, 1)}
-diags = {(-1, -1), (1, -1), (1, -1), (1, 1)}
+diags = {(-1, -1), (-1, 1), (1, -1), (1, 1)}
 all_dirs = adjs | diags
 
 def find_dist(grid, dist, locs, dest):
