@@ -2,19 +2,13 @@
 
 import sys
 
-from copy import deepcopy
-
 import utils
-### available functions:
 # get_grid_edges: min_x, min_y, max_x, max_y
 # display_grid
 # adjs - set of dx,dy values for LRUD adjacencies
 
 test = len(sys.argv) > 1
 input_file = 'input' + sys.argv[0].split('.')[1].lstrip('/') + ('.test' if test else '')
-
-p1 = 0
-p2 = 0
 
 inp = []
 with open(input_file) as f:
@@ -23,6 +17,8 @@ with open(input_file) as f:
 # Part 1
 def find_cheapest(grid):
     min_x, min_y, max_x, max_y = utils.get_grid_edges(grid)
+
+    # assumes top left to bottom right
     start = (min_y, min_x)
     end = (max_y, max_x)
 
@@ -55,16 +51,15 @@ print(f'Part 1: {p1}')
 min_x, min_y, max_x, max_y = utils.get_grid_edges(grid)
 dx = max_x - min_x + 1
 dy = max_y - min_y + 1
-og = deepcopy(grid)
-for mx in range(5):
-    for my in range(5):
-        if mx == my == 0:
-            continue
-        for (y, x), v in og.items():
+for y, x in set(grid.keys()):
+    for mx in range(5):
+        for my in range(5):
+            if mx == my == 0:
+                continue # not strictly necessary, but a little faster
             nx = mx * dx + x
             ny = my * dy + y
-            nv = (v + mx + my)
-            if nv > 9:
+            nv = (grid.get((y, x)) + mx + my)
+            if nv > 9: # wrap around to 1 after 9
                 nv -= 9
             grid[ny, nx] = nv
 
