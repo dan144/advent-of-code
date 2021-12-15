@@ -6,9 +6,11 @@ import sys
 
 import utils
 ### available functions:
-# get_grid_edges: min_x, min_y, max_x, max_y
-# display_grid
+# get_grid_edges - min_x, min_y, max_x, max_y
+# display_grid((y, x) grid) - display values in 2D map grid
 # find_dist(grid, 0, (x,y) start, (x,y) dest) - open=True, wall=False
+# find_cheapest(grid, (y,x) start, (y,x) end) - grid of ints, finds cheapest path from start to end, returns cost dist
+# transpose_grid(grid) - swap key values from (x, y) to (y, x) and back
 # manh(p1[, p2]) - n-dim Manhattan dist; omit p2 for dist from origin
 # is_prime
 # adjs - set of dx,dy values for LRUD adjacencies

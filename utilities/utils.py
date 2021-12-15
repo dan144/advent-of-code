@@ -73,6 +73,33 @@ def find_dist(grid, dist, locs, dest):
         return find_dist(grid, dist + 1, new_froms, dest)
     return -1
 
+def find_cheapest(grid, start, end):
+    locs = {start}
+    costs = {start: 0}
+
+    while locs: # search until no change in grid
+        n_locs = set()
+        for y, x in locs:
+            for dx, dy in adjs:
+                nx = x + dx
+                ny = y + dy
+                if (ny, nx) not in grid:
+                    continue
+                cost = costs.get((y, x), float('inf')) + grid[ny, nx]
+                if cost <= costs.get((ny, nx), float('inf')):
+                    # if cheaper this way, update cost and reconsider this point
+                    costs[ny, nx] = cost
+                    n_locs.add((ny, nx))
+        locs = n_locs
+
+    return costs
+
+def transpose_grid(grid):
+    n_grid = {}
+    for (x, y), v in grid.items():
+        n_grid[y, x] = v
+    return n_grid
+
 def manh(p1, p2=None):
     # n-dim Manhattan distance
     assert p2 is None or len(p1) == len(p2)
