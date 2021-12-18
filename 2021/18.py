@@ -4,25 +4,11 @@ import itertools
 import re
 import sys
 
-from copy import copy
-
 import utils
-### available functions:
-# get_grid_edges - min_x, min_y, max_x, max_y
-# display_grid((y, x) grid) - display values in 2D map grid
-# find_dist(grid, 0, (x,y) start, (x,y) dest) - open=True, wall=False
-# find_cheapest(grid, (y,x) start, (y,x) end) - grid of ints, finds cheapest path from start to end, returns cost dist
-# transpose_grid(grid) - swap key values from (x, y) to (y, x) and back
-# manh(p1[, p2]) - n-dim Manhattan dist; omit p2 for dist from origin
-# is_prime
-# adjs - set of dx,dy values for LRUD adjacencies
-# diags - set of dx,dy values for diagonals
-# all_dirs set of dx,dy values for all 8 surrounding values
 
 test = len(sys.argv) > 1
 input_file = 'input' + sys.argv[0].split('.')[1].lstrip('/') + ('.test' if test else '')
 
-p1 = 0
 p2 = 0
 
 inp = []
@@ -49,7 +35,7 @@ def add(a, b):
         f_val = 0
         start = 0
 
-        old = copy(val)
+        old = val
         max_d = 0
         for i, c in enumerate(old):
             if c == '[':
@@ -62,11 +48,11 @@ def add(a, b):
                 if val[i-1] in '0123456789':
                     vals.append(f_val)
                 if len(vals) == 2: # found pair of numbers
-                    #print(i, level, vals)
                     if level > 4:
                         # explode
                         r = f'[{vals[0]},{vals[1]}]'
-    
+
+                        # check for number after
                         for sj in range(i, len(val)):
                             if val[sj] in '0123456789':
                                 break
@@ -77,10 +63,11 @@ def add(a, b):
                             second = int(val[sj:sk])
                             second += vals[1]
                             val = val[:sj] + str(second) + val[sk:]
-    
-                        #val = val.replace(r, '0', 1)
+
+                        # replace exploded pair
                         val = val[:start] + '0' + val[i+1:]
-    
+
+                        # check for number before
                         for fj in range(start-1, -1, -1):
                             if val[fj] in '0123456789':
                                 break
@@ -88,13 +75,11 @@ def add(a, b):
                             fk = fj
                             while val[fk] in '0123456789':
                                 fk -= 1
-                            #print(fj, fk)
                             # number from fk+1 to fj
                             first = int(val[fk+1:fj+1])
                             first += vals[0]
                             val = val[:fk+1] + str(first) + val[fj+1:]
-    
-                        #print(val)
+
                         break
                 level -= 1
                 vals = []
@@ -120,10 +105,9 @@ def add(a, b):
         assert eval(val)
     return val
 
-val = []
+val = None
 for line in inp:
     if not val:
-        val = eval(line)
         val = line
     else:
         val = add(val, line)
@@ -132,6 +116,6 @@ p1 = mag(eval(val))
 print(f'Part 1: {p1}')
 
 # Part 2
-for a, b in itertools.permutations(inp, 2):
+for a, b in itertools.permutations(inp, 2): # slow but it works
     p2 = max(p2, mag(eval(add(a, b))))
 print(f'Part 2: {p2}')
