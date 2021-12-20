@@ -8,11 +8,6 @@ import utils
 ### available functions:
 # get_grid_edges - min_x, min_y, max_x, max_y
 # display_grid((y, x) grid) - display values in 2D map grid
-# find_dist(grid, 0, (x,y) start, (x,y) dest) - open=True, wall=False
-# find_cheapest(grid, (y,x) start, (y,x) end) - grid of ints, finds cheapest path from start to end, returns cost dist
-# transpose_grid(grid) - swap key values from (x, y) to (y, x) and back
-# manh(p1[, p2]) - n-dim Manhattan dist; omit p2 for dist from origin
-# is_prime
 # adjs - set of dx,dy values for LRUD adjacencies
 # diags - set of dx,dy values for diagonals
 # all_dirs set of dx,dy values for all 8 surrounding values
@@ -40,34 +35,38 @@ with open(input_file) as f:
             y += 1
 
 def default_val(s):
-    if test:
-        return '.'
-    return '#' if s % 2 else '.'
-print(inp)
-print()
+    # all . values (i.e. the "infinite" border) will use the first bit of the image enhanacement alg
+    # if the first value in inp is '#' then they'll become 1
+    # if the last value in inp is '.' then they'll flip back
+    if inp[0] == '#':
+        return inp[0] if s % 2 else inp[-1]
+    return inp[0]
+
 # Part 1
 def run(grid, n):
     for s in range(n):
+        d = default_val(s)
         n = {}
+
+        # ensure doing all neighbors to handle "infinite"
         mnx, mny, mxx, mxy = utils.get_grid_edges(grid)
         mnx -= 1
         mny -= 1
         mxx += 1
         mxy += 1
-        for x in range(mnx, mxx+1):
-            for y in range(mny, mxy+1):
+        for x in range(mnx, mxx + 1):
+            for y in range(mny, mxy + 1):
                 v = ''
                 for (dy, dx) in sorted(utils.all_dirs | {(0, 0)}):
                     ny = y + dy
                     nx = x + dx
-                    v += grid.get((ny, nx), default_val(s))
+                    v += grid.get((ny, nx), d)
                 v = v.replace('#', '1').replace('.', '0')
                 v = int(v, 2)
                 n[y, x] = inp[v]
         grid = n
     return grid
 
-#utils.display_grid(grid)
 g = run(deepcopy(grid), 2)
 p1 = sum((x == '#' for x in g.values()))
 print(f'Part 1: {p1}')
