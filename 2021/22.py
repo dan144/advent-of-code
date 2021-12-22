@@ -4,17 +4,6 @@ import re
 import sys
 
 import utils
-### available functions:
-# get_grid_edges - min_x, min_y, max_x, max_y
-# display_grid((y, x) grid) - display values in 2D map grid
-# find_dist(grid, 0, (x,y) start, (x,y) dest) - open=True, wall=False
-# find_cheapest(grid, (y,x) start, (y,x) end) - grid of ints, finds cheapest path from start to end, returns cost dist
-# transpose_grid(grid) - swap key values from (x, y) to (y, x) and back
-# manh(p1[, p2]) - n-dim Manhattan dist; omit p2 for dist from origin
-# is_prime
-# adjs - set of dx,dy values for LRUD adjacencies
-# diags - set of dx,dy values for diagonals
-# all_dirs set of dx,dy values for all 8 surrounding values
 
 test = len(sys.argv) > 1
 input_file = 'input' + sys.argv[0].split('.')[1].lstrip('/') + ('.test' if test else '')
@@ -29,10 +18,10 @@ with open(input_file) as f:
         inp.append([cmd] + list(map(int, re.findall(r'-?[0-9]+', line))))
 
 # Part 1
+# original part 1 solution; could be replaced by adapted part 2 solution
 def run(lim):
     grid = {}
-    for i, line in enumerate(inp):
-        print(f'\r {i+1}/{len(inp)}', end='')
+    for line in inp:
         cmd = line[0]
         for x in range(max(line[1], -lim), min(line[2], lim) + 1):
             for y in range(max(line[3], -lim), min(line[4], lim) + 1):
@@ -57,18 +46,22 @@ def vol(cube):
     return x*y*z
 
 def scoop(c1, c2):
+    # this fxn returns all sub-cubes of c1 that do not overlap with c2
     frags = []
 
     # check for no intersection
     for i in (0, 2, 4):
         if c2[i] > c1[i+1] or c2[i+1] < c1[i]:
-            return (tuple(c1),)
+            return (c1,)
 
+    c1 = list(c1)
+
+    # trim off outer edges that do not intersect and save them
     for i in (0, 2, 4): # check low val edges
         if c2[i] > c1[i]: # keep+remove low side
             n = list(c1)
-            n[i+1] = c2[i] - 1
-            c1[i] = c2[i]
+            n[i+1] = c2[i] - 1 # keep up to just outside c2's left edge
+            c1[i] = c2[i] # retain full size including c2's edge
             frags.append(tuple(n))
 
     for i in (1, 3, 5): # check high val edges
@@ -82,15 +75,14 @@ def scoop(c1, c2):
 
 on = set()
 for i, line in enumerate(inp):
-    print(f'\r {i+1}/{len(inp)}', end='')
-    cmd, adding = line[0], tuple(line[1:])
+    cmd, adding = line[0], line[1:]
     new = set()
     for cube in on:
-        scooped = scoop(list(cube), adding)
+        scooped = scoop(cube, adding)
         new.update(scooped)
     on = new
     if cmd == 'on':
-        on.add(adding)
+        on.add(tuple(adding))
 
 for cube in on:
     p2 += vol(cube)
