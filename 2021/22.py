@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-import itertools
 import re
 import sys
 
@@ -51,5 +50,48 @@ p1 = sum(run(50).values())
 print(f'\rPart 1: {p1}')
 
 # Part 2
+def vol(cube):
+    x = cube[1] - cube[0] + 1
+    y = cube[3] - cube[2] + 1
+    z = cube[5] - cube[4] + 1
+    return x*y*z
 
+def scoop(c1, c2):
+    frags = []
+
+    # check for no intersection
+    for i in (0, 2, 4):
+        if c2[i] > c1[i+1] or c2[i+1] < c1[i]:
+            return (tuple(c1),)
+
+    for i in (0, 2, 4): # check low val edges
+        if c2[i] > c1[i]: # keep+remove low side
+            n = list(c1)
+            n[i+1] = c2[i] - 1
+            c1[i] = c2[i]
+            frags.append(tuple(n))
+
+    for i in (1, 3, 5): # check high val edges
+        if c2[i] < c1[i]: # second shape's high side lower than first's low side, keep+remove high side
+            n = list(c1)
+            n[i-1] = c2[i] + 1 # shaved high end goes to c2's low end but not overlapping
+            c1[i] = c2[i] # remaining high end stops 1 toward the low end
+            frags.append(tuple(n))
+
+    return tuple(frags)
+
+on = set()
+for i, line in enumerate(inp):
+    print(f'\r {i+1}/{len(inp)}', end='')
+    cmd, adding = line[0], tuple(line[1:])
+    new = set()
+    for cube in on:
+        scooped = scoop(list(cube), adding)
+        new.update(scooped)
+    on = new
+    if cmd == 'on':
+        on.add(adding)
+
+for cube in on:
+    p2 += vol(cube)
 print(f'\rPart 2: {p2}')
