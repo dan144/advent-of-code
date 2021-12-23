@@ -67,7 +67,7 @@ while scanners:
         print(f'\rlooking at {n}', end='')
         for x in dirs:
             for y in dirs:
-                for z in dirs:
+                for z in dirs[:2]: # removes 2 orientations that are always duplicates
                     rot = Rx(x) * Ry(y) * Rz(z)
                     rot_beacons = []
                     for beacon in beacons:
