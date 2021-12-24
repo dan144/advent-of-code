@@ -1,0 +1,113 @@
+inp w # 0
+add z 12
+add z w # save 0th + 12
+inp w # 1
+mul z 26
+add z 7
+add z w # save 1st + 7
+inp w # 2
+mul z 26
+add z w
+add z 8 # save 2nd + 8
+inp w # 3
+mul z 26
+add z w
+add z 8 # save 3rd + 8
+inp w # 4
+mul z 26
+add z 15
+add z w # save 4th + 15
+inp w # 5
+mul x 0
+add x z
+mod x 26
+div z 26
+add x -16
+eql x w # if the 5th input == 4th input + 15 - 16
+eql x 0 # then x == 0 # don't save the 5th input
+inp w # 6
+mul z 26
+add z 8
+add z w # save 6th + 8
+inp w # 7
+mul x 0
+add x z
+mod x 26
+div z 26
+add x -11
+eql x w # if 6th input + 8 - 11 == 7th input
+eql x 0 # then x == 0 here
+inp w # 8
+mul x 0
+add x z
+mod x 26
+div z 26
+add x -13
+eql x w # if the 8th input == 3rd input + 8 - 13
+eql x 0
+inp w # 9
+mul z 26
+add z 13
+add z w # save 9th plus 13
+inp w # 10
+mul x 0
+add x z
+mod x 26
+div z 26
+add x -8
+eql x w # if the 9th + 13 - 8 == 10th
+eql x 0 # then x == 0 after this
+inp w # 11
+mul x 0
+add x z
+mod x 26
+div z 26
+add x -1 # this is the 2nd + 8 - 1
+eql x w # if the 2nd input + 7 == 11th
+eql x 0
+mul y 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 9
+mul y x
+add z y
+inp w # 12
+mul x 0
+add x z
+mod x 26
+div z 26
+add x -4 # this is the 1st + 7 - 4
+eql x w # if the 12th - 3 == 1st
+eql x 0 # don't save 12th
+mul y 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 4
+mul y x
+add z y
+inp w # 13
+mul x 0
+add x z
+mod x 26
+div z 26
+add x -14 # this is the 0th + 12 - 14
+eql x w # if the 13th == the 0th - 2
+eql x 0
+mul y 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 13
+mul y x
+add z y
