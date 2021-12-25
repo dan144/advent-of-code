@@ -61,7 +61,7 @@ def validate(input_val):
 
 # Part 1
 input_val = list(str(10**14))
-while True:
+while not validate(input_val):
     input_val = int(''.join(input_val)) - 1
     input_val = list(str(input_val))
 
@@ -104,9 +104,6 @@ while True:
     if '0' in input_val: # no 0s allowed
         continue
 
-    if validate(input_val):
-        break
-
 p1 = ''.join(input_val)
 print(f'Part 1: {p1}')
 
@@ -122,6 +119,5 @@ input_val[11] = input_val[2] + 7
 input_val[12] = input_val[1] + 3
 
 p2 = ''.join((map(str, input_val)))
-
 assert validate(p2)
 print(f'Part 2: {p2}')
