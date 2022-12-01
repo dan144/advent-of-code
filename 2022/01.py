@@ -2,22 +2,16 @@
 
 import sys
 
-import utils
-
 test = len(sys.argv) > 1
 input_file = 'input' + sys.argv[0].split('.')[1].lstrip('/') + ('.test' if test else '')
 
-inp = []
+cals = [0]
 with open(input_file) as f:
     for line in f:
-        inp.append(line.strip())
-
-cals = [0]
-for cal in inp:
-    if cal:
-        cals[-1] += int(cal)
-    else:
-        cals.append(0)
+        if cal := line.strip():
+            cals[-1] += int(cal)
+        else:
+            cals.append(0)
 
 p1 = max(cals)
 print(f'Part 1: {p1}')
