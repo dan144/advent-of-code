@@ -18,29 +18,31 @@ with open(input_file) as f:
 
 # Part 1
 
-cycles = [1]
+needed = [20, 60, 100, 140, 180, 220]
 cycle = 0
 X = 1
 display = {}
 for cmd in inp:
-    pixel = (cycle // 40, cycle % 40)
     cmd = cmd.split()
-    if cmd[0] == 'noop':
-        cycles.append(X)
-        display[pixel] = '#' if pixel[1] in {X - 1, X, X + 1} else '.'
-        cycle += 1
-    elif cmd[0] == 'addx':
-        cycles.append(X)
-        display[pixel] = '#' if pixel[1] in {X - 1, X, X + 1} else '.'
-        cycle += 1
-        cycles.append(X)
-        pixel = (cycle // 40, cycle % 40)
-        display[pixel] = '#' if pixel[1] in {X - 1, X, X + 1} else '.'
-        cycle += 1
-        X += int(cmd[1])
 
-for x in [20, 60, 100, 140, 180, 220]:
-    p1 += cycles[x] * x
+    pixel = (cycle // 40, cycle % 40)
+    display[pixel] = '#' if pixel[1] in {X - 1, X, X + 1} else '.'
+    cycle += 1
+    if cycle in needed:
+        p1 += cycle * X
+
+    if cmd[0] == 'noop':
+        continue
+
+    # otherwise is an addx command
+    pixel = (cycle // 40, cycle % 40)
+    display[pixel] = '#' if pixel[1] in {X - 1, X, X + 1} else '.'
+    cycle += 1
+    if cycle in needed:
+        p1 += cycle * X
+
+    X += int(cmd[1])
+
 print(f'Part 1: {p1}')
 
 # Part 2
