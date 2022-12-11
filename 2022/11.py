@@ -40,27 +40,30 @@ with open(input_file) as f:
         elif line[1] == 'false:':
             monkeys[monkey]['false'] = int(line[-1])
 
-# Part 1
-for r in range(10000):
-    monkey_list = monkeys.keys()
-    for monkey in monkey_list:
-        value = monkeys[monkey]
-        for item in value['items']:
-            business[monkey] += 1
-            worry = eval(value['op'].replace('old', str(item)))
-            #worry //= 3
-            worry = worry % m
-            if worry % value['test'] == 0:
-                give_to = value['true']
-            else:
-                give_to = value['false']
-            monkeys[give_to]['items'].append(worry)
-        monkeys[monkey]['items'] = []
+def run(monkeys, part):
+    for r in range(10000 if part == 2 else 20):
+        monkey_list = monkeys.keys()
+        for monkey in monkey_list:
+            value = monkeys[monkey]
+            for item in value['items']:
+                business[monkey] += 1
+                worry = eval(value['op'].replace('old', str(item)))
+                if part == 1:
+                    worry //= 3
+                else:
+                    worry = worry % m
+                if worry % value['test'] == 0:
+                    give_to = value['true']
+                else:
+                    give_to = value['false']
+                monkeys[give_to]['items'].append(worry)
+            monkeys[monkey]['items'] = []
 
-vals = sorted(business.values(), reverse=True)
-p1 = vals[0] * vals[1]
+    vals = sorted(business.values(), reverse=True)
+    return vals[0] * vals[1]
+
+p1 = run(deepcopy(monkeys), 1)
 print(f'Part 1: {p1}')
 
-# Part 2
-
+p2 = run(deepcopy(monkeys), 2)
 print(f'Part 2: {p2}')
