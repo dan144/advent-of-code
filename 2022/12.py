@@ -27,9 +27,10 @@ with open(input_file) as f:
     grid = utils.load_grid(f, str) # 2D grid of X type
 
 # Part 1
+start = set()
 for loc, v in grid.items():
-    if v == 'S':
-        start = loc
+    if v in 'Sa':
+        start.add(loc)
     elif v == 'E':
         end = loc
 
@@ -58,10 +59,11 @@ def find_dist(grid, dist, dist_grid, locs, dest):
     return -1
 
 print(start, end)
-grid[start] = 'a'
+for x in start:
+    grid[x] = 'a'
 grid[end] = 'z'
 utils.display_grid(grid)
-p1 = find_dist(grid, 0, {}, {start}, end)
+p1 = find_dist(grid, 0, {}, start, end)
 print(f'Part 1: {p1}')
 
 # Part 2
