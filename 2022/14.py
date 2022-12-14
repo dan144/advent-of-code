@@ -48,13 +48,18 @@ with open(input_file) as f:
             prev = (nx, ny)
         print()
 
+min_y, min_x, max_y, max_x = utils.get_grid_edges(grid)
+dx = max_x - min_x
+max_y += 2
+
+for x in range(min_x - 10 * dx, max_x + 10 * dx):
+    grid[max_y, x] = '#'
 grid[0, 500] = '+'
 utils.display_grid(grid)
 
 
 # Part 1
 
-min_x, min_y, max_x, max_y = utils.get_grid_edges(grid)
 infinity = False
 while not infinity:
     grain = (0, 500)
@@ -74,8 +79,8 @@ while not infinity:
             grid[grain] = 'o'
             p1 += 1
             falling = False
-            #utils.display_grid(grid)
-            #input()
+    if grid.get((0, 500)) == 'o':
+        infinity = True
 
 print(f'Part 1: {p1}')
 
