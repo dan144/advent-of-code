@@ -49,8 +49,6 @@ for idx, (a, b) in enumerate(lists):
     assert c is not None
     if c is True:
         p1 += idx + 1
-    elif c is None:
-        assert False
 
 print(f'Part 1: {p1}')
 
