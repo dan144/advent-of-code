@@ -2,8 +2,6 @@
 
 import sys
 
-import utils
-
 test = len(sys.argv) > 1
 input_file = 'input' + sys.argv[0].split('.')[1].lstrip('/') + ('.test' if test else '')
 
@@ -23,21 +21,19 @@ with open(input_file) as f:
 lists.append(s)
 
 def compare(a, b):
+    # returns True or False if a decision is made; None to continue
     if isinstance(a, int) and isinstance(b, int):
-        if a < b:
-            return True
-        elif a == b:
+        if a == b:
             return None
-        else:
-            return False
+        return a < b
     elif isinstance(a, list) and isinstance(b, list):
         for i in range(len(a)):
-            if i >= len(b):
+            if i >= len(b): # right side ran out
                 return False
             c = compare(a[i], b[i])
-            if c in {False, True}:
+            if c in {False, True}: # only return if conclusive
                 return c
-        if len(b) > len(a):
+        if len(b) > len(a): # left side ran out
             return True
         return None
     else: # different
@@ -47,23 +43,22 @@ def compare(a, b):
     return None
 
 
+# Part 1
 for idx, (a, b) in enumerate(lists):
     c = compare(a, b)
+    assert c is not None
     if c is True:
         p1 += idx + 1
     elif c is None:
         assert False
 
-# Part 1
 print(f'Part 1: {p1}')
 
 # Part 2
-
 all_lists = [[[2]], [[6]]]
 for a, b in lists:
     all_lists.extend([a, b])
 
-sorted_lists = []
 while all_lists:
     for a in all_lists:
         a_at_end = True
@@ -71,16 +66,15 @@ while all_lists:
             if a == b:
                 continue
             c = compare(a, b)
-            if c is True: # is not at the end
+            assert c is not None
+            if c: # a is not at the end
                 a_at_end = False
                 break
-        if a_at_end is True:
+        if a_at_end: # found it
             break
     if a_at_end is True:
-        sorted_lists = [a] + sorted_lists
+        if a == [[2]] or a == [[6]]:
+            p2 *= len(all_lists)
         all_lists.remove(a)
 
-for idx, a in enumerate(sorted_lists):
-    if a == [[2]] or a == [[6]]:
-        p2 *= idx + 1
 print(f'Part 2: {p2}')
