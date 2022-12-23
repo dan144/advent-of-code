@@ -38,11 +38,13 @@ with open(input_file) as f:
 assert line == ''.join(ins)
 # Part 1
 
-min_x, min_y, max_x, max_y = utils.get_grid_edges(grid)
+min_y, min_x, max_y, max_x = utils.get_grid_edges(grid)
 y = min_y
 for x in range(min_x, max_x + 1):
     if grid.get((y, x)) == '.':
         break
+else:
+    assert False
 
 deltas = {
     0: (1, 0),
@@ -54,7 +56,7 @@ deltas = {
 grid[y, x] = '>'
 facing = 0 # right 0, down 1, left 2, up 3
 for i in ins:
-    print(i)
+    assert grid[y, x] in '.><^v'
     if i in 'LR':
         facing += 1 if i == 'R' else -1
         facing = facing % 4
@@ -65,11 +67,7 @@ for i in ins:
             nx = x + d[0]
             ny = y + d[1]
             n = grid.get((ny, nx), ' ')
-            if n == '#': # stop
-                break
-            elif n in '.<>v^': # go
-                y, x = ny, nx
-            elif n == ' ': # wrap
+            if n in ' ': # wrap
                 if facing == 0: # right
                     nx = min_x
                 elif facing == 1: # down
@@ -81,29 +79,27 @@ for i in ins:
                 else:
                     assert False, f'Facing is {facing}'
 
-                while (n := grid.get((ny, nx), ' ')) == ' ':
+                while (n := grid.get((ny, nx), ' ')) in ' ':
                     nx += d[0]
                     ny += d[1]
-                if n == '#':
-                    break
-                elif n in '<>v^.':
-                    y, x = ny, nx
-                else:
-                    assert False, f'Found a {n}'
+
+            if n == '#': # stop
+                break
+            elif n in '.<>v^': # go
+                y, x = ny, nx
             else:
-                assert False, f'Found a {n}'
+                utils.display_grid(grid)
+                assert False, f'Found a {n} at {x}, {y}'
+
             grid[y, x] = '>v<^'[facing]
         if test:
             utils.display_grid(grid)
             print()
             input()
 
-grid[y, x] = 'F'
-utils.display_grid(grid)
-# 8486  is too low
-# 14462 is too low
 print(y + 1, x + 1, facing)
 p1 = 1000 * (y + 1) + 4 * (x + 1) + facing
+#utils.display_grid(grid)
 print(f'Part 1: {p1}')
 
 # Part 2
