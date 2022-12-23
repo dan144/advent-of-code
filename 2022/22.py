@@ -39,6 +39,7 @@ assert line == ''.join(ins)
 # Part 1
 
 min_y, min_x, max_y, max_x = utils.get_grid_edges(grid)
+# x across, y down, cmon man
 y = min_y
 for x in range(min_x, max_x + 1):
     if grid.get((y, x)) == '.':
@@ -92,7 +93,7 @@ for i in ins:
                 assert False, f'Found a {n} at {x}, {y}'
 
             grid[y, x] = '>v<^'[facing]
-        if test:
+        if test and False:
             utils.display_grid(grid)
             print()
             input()
@@ -104,4 +105,61 @@ print(f'Part 1: {p1}')
 
 # Part 2
 
+grid = utils.parse_grid(lines)
+y = min_y
+for x in range(min_x, max_x + 1):
+    if grid.get((y, x)) == '.':
+        break
+else:
+    assert False
+
+facing = 0 # right 0, down 1, left 2, up 3
+for i in ins:
+    assert grid[y, x] in '.><^v'
+    if i in 'LR':
+        facing += 1 if i == 'R' else -1
+        facing = facing % 4
+        grid[y, x] = '>v<^'[facing]
+    else:
+        d = deltas[facing]
+        for _ in range(int(i)):
+            nx = x + d[0]
+            ny = y + d[1]
+            n = grid.get((ny, nx), ' ')
+            if n in ' ': # wrap
+                if facing == 2 and x == 50 and 0 <= y < 50:
+                    ny = 150 - y
+                    nx = 0
+                    facing = 0
+                elif facing == 3 and y == 0 and 50 <= x < 99:
+                    ny = 150 + x - 50
+                    nx = 0
+                    facing = 0
+                elif facing == 2 and x == 0 and 100 <= y < 150:
+                    ny = 0
+                    assert False
+                    nx = 50
+                    facing = 0
+                else:
+                    utils.display_grid(grid)
+                    assert False, f'{x}, {y}, facing {facing}'
+
+                d = deltas[facing]
+                while (n := grid.get((ny, nx), ' ')) in ' ':
+                    nx += d[0]
+                    ny += d[1]
+
+                print(f'Jumping from {x},{y} to {nx},{ny}')
+            if n == '#': # stop
+                break
+            elif n in '.<>v^': # go
+                y, x = ny, nx
+            else:
+                utils.display_grid(grid)
+                assert False, f'Found a {n} at {x}, {y}'
+
+            grid[y, x] = '>v<^'[facing]
+
+print(y + 1, x + 1, facing)
+p2 = 1000 * (y + 1) + 4 * (x + 1) + facing
 print(f'Part 2: {p2}')
