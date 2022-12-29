@@ -67,7 +67,7 @@ new_grid = {}
 removed = set()
 while True:
     i += 1
-    print(i)
+    print(f'\r{i}', end='')
     if test:
         if grid:
             utils.display_grid(grid, '.')
@@ -83,8 +83,7 @@ while True:
             if v == '#':
                 break
         else:
-            moves.add(((x, y), (x, y))) # don't move
-            removed.add((x, y))
+            moves.add(((x, y), (x, y)))
             continue # found no elves
 
         for f in range(4):
@@ -92,12 +91,15 @@ while True:
                 moves.add(n)
                 break
         else:
-            moves.add(((x, y), (x, y))) # don't move
+            moves.add(((x, y), (x, y))) # can't move any direction
 
     move_fxn = move_fxn[1:] + [move_fxn[0]]
 
     new_grid = {}
     for p, np in moves:
+        if p == np: # didn't move, stay in place
+            new_grid[p] = '#'
+            continue
         for p2, np2 in moves:
             if p == p2:
                 continue
@@ -113,11 +115,9 @@ while True:
         ngrid = deepcopy(grid)
         for x, y in removed:
             ngrid[x, y] = '#'
-        min_x, min_y, max_x, max_y = utils.get_grid_edges(grid)
-        p1 = (max_x - min_x + 1) * (max_y - min_y + 1) - len(grid.keys())
+        min_x, min_y, max_x, max_y = utils.get_grid_edges(ngrid)
+        p1 = (max_x - min_x + 1) * (max_y - min_y + 1) - len(ngrid.keys())
         print(f'Part 1: {p1}')
-
-# Part 2
 
 p2 = i
 print(f'Part 2: {p2}')
