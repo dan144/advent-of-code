@@ -38,12 +38,12 @@ def get_grid_edges(grid):
     mxy = max({y for x, y in grid.keys()})
     return mnx, mny, mxx, mxy
 
-def display_grid(grid):
+def display_grid(grid, d=' '):
     mnx, mny, mxx, mxy = get_grid_edges(grid)
 
     for x in range(mnx, mxx + 1):
         for y in range(mny, mxy + 1):
-            print(grid.get((x, y), ' '), end='')
+            print(grid.get((x, y), d), end='')
         print()
 
 def parse_grid(lines, cast_to=str):
