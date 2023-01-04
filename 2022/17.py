@@ -48,11 +48,40 @@ for y in range(1, 8):
     grid[y, 0] = '-'
 grid[0, 0] = '+'
 grid[8, 0] = '+'
+min_x, min_y, max_x, max_y = utils.get_grid_edges(grid)
 
 moveidx = 0
-for b in range(2022):
+diffs = ''
+vals = []
+for b in range(1000000000000):
+    o = max_y
+    vals.append(o)
     min_x, min_y, max_x, max_y = utils.get_grid_edges(grid)
+    diffs += str(max_y - o)
     new_coords = list(map(list, shape_coords[b % 5]))
+
+    print(f'\r{b}', end='')
+    if b == 2022:
+        _, _, _, p1 = utils.get_grid_edges(grid)
+        print()
+        print(f'Part 1: {p1}')
+
+    if b and b % 5000 == 0:
+        for j in range(5000, 1000, -1):
+            l = len(diffs)
+            rest, find = diffs[:l - j], diffs[l - j:]
+            if rest.endswith(find):
+                f = len(find)
+                x = sum([int(x) for x in find])
+                print()
+                print(f'Pattern is {f} long and increments {x}')
+                n = 1000000000000 // f
+                s = 1000000000000 % f + 1
+                print(f'Repeats {n} times and starts at pos {s} ({vals[s]})')
+                p2 = x * n + vals[s]
+                print(f'Part 2: {p2}')
+                sys.exit(0)
+
     for c in new_coords:
         c[1] += max_y
 
@@ -87,10 +116,3 @@ for b in range(2022):
                 grid[tuple(c)] = '#'
         if not can_move:
             break
-
-_, _, _, p1 = utils.get_grid_edges(grid)
-print(f'Part 1: {p1}')
-
-# Part 2
-
-print(f'Part 2: {p2}')
